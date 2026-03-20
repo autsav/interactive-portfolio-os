@@ -1,4 +1,5 @@
 import { ProjectInfo, GithubRepository } from "../types/project";
+import { readFeatured } from "./featured";
 
 const GITHUB_USERNAME = "autsav"; // the user's username identified earlier 'autsav'
 
@@ -159,11 +160,21 @@ export async function fetchGithubProjects(): Promise<ProjectInfo[]> {
     }
 
     const nodes = data.user.repositories.nodes as GithubRepository[];
-    
-    // Filter and map projects (only include repositories that meet our threshold or manual list)
-    return nodes
-      .map((repo) => mapRepositoryToProjectInfo(repo))
-      .filter((p) => p.metrics.stars > 0 || p.topics.includes("ai") || p.topics.includes("saas"));
+    const allMapped = nodes.map((repo) => mapRepositoryToProjectInfo(repo));
+
+    // Honour the admin-selected featured list (if any)
+    const featuredIds = await readFeatured();
+    if (featuredIds.length > 0) {
+      const ordered = featuredIds
+        .map((id) => allMapped.find((p) => p.id === id))
+        .filter(Boolean) as ProjectInfo[];
+      return ordered.length > 0 ? ordered : allMapped;
+    }
+
+    // Fallback: show all repos with at least 1 star or relevant topic
+    return allMapped.filter(
+      (p) => p.metrics.stars > 0 || p.topics.includes("ai") || p.topics.includes("saas")
+    );
   } catch (err) {
     console.error("Error fetching projects:", err);
     return MOCK_PROJECTS;
