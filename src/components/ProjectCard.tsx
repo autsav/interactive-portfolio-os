@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Star, GitMerge, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
+import { Star } from "lucide-react";
 import { ProjectInfo } from "@/types/project";
 
 interface ProjectCardProps {
@@ -10,15 +11,39 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, onClick }: ProjectCardProps) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
   return (
     <motion.div
       layoutId={`project-container-${project.id}`}
       whileHover={{ y: -5, scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => onClick(project)}
+      onMouseMove={onMouseMove}
       className="glass-card cursor-pointer group relative overflow-hidden rounded-2xl flex flex-col h-[280px]"
     >
-      <div className="p-6 flex-1 flex flex-col">
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100 mix-blend-screen"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              400px circle at ${mouseX}px ${mouseY}px,
+              ${project.primaryLanguageColor ? project.primaryLanguageColor + "20" : 'rgba(255,255,255,0.08)'},
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
+
+      <div className="p-6 flex-1 flex flex-col relative z-10">
         <div className="flex justify-between items-start mb-4">
           <motion.div
             layoutId={`project-icon-${project.id}`}
@@ -46,7 +71,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
 
         <motion.h3
           layoutId={`project-title-${project.id}`}
-          className="text-xl font-semibold text-white mb-2 tracking-tight group-hover:text-blue-400 transition-colors"
+          className="text-xl font-semibold text-white mb-2 tracking-tight group-hover:text-amber-50 shadow-black transition-colors"
         >
           {project.name}
         </motion.h3>
@@ -59,12 +84,12 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
         </motion.p>
       </div>
 
-      <div className="px-6 pb-6 mt-auto">
+      <div className="px-6 pb-6 mt-auto relative z-10">
         <div className="flex flex-wrap gap-2">
           {project.topics.slice(0, 3).map((topic) => (
             <span
               key={topic}
-              className="px-2 py-1 text-[10px] uppercase tracking-wider font-semibold text-neutral-300 bg-neutral-800/50 rounded-sm border border-neutral-800"
+              className="px-2 py-1 text-[10px] uppercase tracking-wider font-semibold text-neutral-300 bg-neutral-800/50 rounded-sm border border-neutral-800 backdrop-blur-md"
             >
               {topic}
             </span>
