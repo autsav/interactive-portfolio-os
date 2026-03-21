@@ -72,10 +72,10 @@ export function NavigationBar() {
         </div>
 
         {/* Center: Nav Links */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium" style={{ color: "var(--fg-muted)" }}>
-          <a href="#bento" className="transition-colors hover:opacity-70 focus:opacity-60">Capabilities</a>
-          <a href="#projects" className="transition-colors hover:opacity-70 focus:opacity-60">Projects</a>
-          <a href="#mlops" className="transition-colors hover:opacity-70 focus:opacity-60">MLOps</a>
+        <div className="hidden md:flex items-center gap-8 text-sm font-semibold">
+          <a href="#bento" className="transition-colors hover:opacity-70" style={{ color: "var(--fg-muted)" }}>Capabilities</a>
+          <a href="#projects" className="transition-colors hover:opacity-70" style={{ color: "var(--fg-muted)" }}>Projects</a>
+          <a href="#mlops" className="transition-colors hover:opacity-70" style={{ color: "var(--fg-muted)" }}>MLOps</a>
         </div>
 
         {/* Right: Time + Theme Toggle + Socials */}
