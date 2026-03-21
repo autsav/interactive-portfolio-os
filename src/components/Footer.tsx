@@ -26,7 +26,7 @@ export function Footer() {
         </motion.div>
 
         <h3 className="text-xl font-bold tracking-tight mb-2" style={{ color: "var(--fg)" }}>
-          Interactive Project OS
+          Utsab Adhikari
         </h3>
         <p className="text-sm max-w-sm mb-10 font-light leading-relaxed" style={{ color: "var(--fg-muted)" }}>
           Engineering for impact. Proof that great systems and beautiful design are the same problem.

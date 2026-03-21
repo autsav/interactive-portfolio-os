@@ -61,10 +61,10 @@ export function NavigationBar() {
             <LayoutGrid size={16} style={{ color: "var(--orange)" }} />
           </div>
           <div className="hidden sm:flex flex-col">
-            <span className="font-semibold text-sm leading-tight tracking-tight" style={{ color: "var(--fg)" }}>
-              Interactive OS
+            <span className="font-bold text-[15px] leading-tight tracking[-0.02em]" style={{ color: "var(--fg)" }}>
+              Utsab Adhikari
             </span>
-            <span className="mono text-[10px] flex items-center gap-1.5 tracking-widest uppercase" style={{ color: "var(--green)" }}>
+            <span className="mono text-[10px] flex items-center gap-1.5 tracking-widest uppercase font-bold" style={{ color: "var(--green)" }}>
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "var(--green)" }} />
               Available for Hire
             </span>

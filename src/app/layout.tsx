@@ -9,12 +9,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Interactive Portfolio OS — AI Systems Architect",
+  title: "Utsab Adhikari | AI Systems Architect",
   description:
     "Senior AI Systems Architect and creative developer. Explore production-grade AI orchestration and spatial computing through an interactive project operating system.",
-  keywords: ["AI Engineer", "ML Systems", "Next.js", "Portfolio", "LLMs", "RAG", "MLOps"],
+  keywords: ["Utsab Adhikari", "AI Engineer", "ML Systems", "Next.js", "Portfolio", "LLMs", "RAG", "MLOps"],
   openGraph: {
-    title: "Interactive Portfolio OS",
+    title: "Utsab Adhikari // AI Portfolio",
     description: "A live demonstration of production-grade AI orchestration — not a static resume.",
     type: "website",
   },
@@ -31,10 +31,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Person",
-              "name": "Portfolio OS",
+              "name": "Utsab Adhikari",
               "jobTitle": "Senior AI Systems Architect",
               "knowsAbout": ["AI Orchestration", "MLOps", "Full-Stack Development"],
-              "description": "Interactive Portfolio OS of a Senior AI Systems Architect.",
+              "description": "Interactive Portfolio OS of Utsab Adhikari, Senior AI Systems Architect.",
             }),
           }}
         />
