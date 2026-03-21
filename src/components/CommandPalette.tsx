@@ -35,7 +35,7 @@ export function CommandPalette({ projects }: CommandPaletteProps) {
     <>
       <button 
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 bg-white/10 hover:bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-xs font-mono text-neutral-300 flex items-center gap-2 shadow-xl transition-all"
+        className="fixed bottom-6 left-6 z-40 bg-white/10 hover:bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-xs font-mono text-neutral-300 flex items-center gap-2 shadow-xl transition-all"
       >
         <Search size={14} /> Search 
         <kbd className="bg-black/40 px-1.5 py-0.5 rounded border border-white/10 ml-1 font-sans font-medium text-[10px] uppercase text-neutral-400">Cmd K</kbd>
@@ -101,7 +101,7 @@ export function CommandPalette({ projects }: CommandPaletteProps) {
                   <a href="https://twitter.com/autsav" target="_blank" className="flex items-center px-3 py-3 rounded-xl hover:bg-neutral-800 transition-colors text-sm text-neutral-300">
                     <Twitter size={16} className="mr-3" /> Twitter
                   </a>
-                  <a href="mailto:contact@autsav.com" className="flex items-center px-3 py-3 rounded-xl hover:bg-neutral-800 transition-colors text-sm text-neutral-300">
+                  <a href="mailto:autsav73@gmail.com" className="flex items-center px-3 py-3 rounded-xl hover:bg-neutral-800 transition-colors text-sm text-neutral-300">
                     <Mail size={16} className="mr-3" /> Contact Engineering
                   </a>
                 </div>
