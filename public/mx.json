@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "name": "Senior AI Systems Architect",
+    "focus": ["Agentic Orchestration", "MLOps", "Spatial Computing"],
+    "tech_stack": {
+      "frontend": ["Next.js 16", "React", "Three.js", "Framer Motion"],
+      "backend": ["Python", "Go", "Node.js", "PostgreSQL", "Supabase"],
+      "ai": ["LangChain", "OpenAI", "Anthropic", "Mistral", "PyTorch"]
+    }
+  },
+  "capabilities": [
+    {
+      "signal": "Agentic Workflows",
+      "description": "Building autonomous loops with self-correction and multi-hop reasoning capabilities."
+    },
+    {
+      "signal": "MLOps Pipelines",
+      "description": "End-to-end telemetry and observability for production models, including drift detection."
+    }
+  ],
+  "projects": [
+    {
+      "id": "aura-os",
+      "case_study_context": "Reframing standard project boards as spatial operating systems for enhanced proof of skill."
+    }
+  ],
+  "mx_optimized": true,
+  "last_updated": "2026-03-21T12:58:12Z"
+}

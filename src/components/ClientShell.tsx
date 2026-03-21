@@ -24,8 +24,17 @@ const CommandPalette = dynamic(
   { ssr: false }
 );
 
+const LaboratorySection = dynamic(
+  () => import("./LaboratorySection").then((m) => m.LaboratorySection),
+  { ssr: false }
+);
+
 export function HeroSectionClient() {
   return <HeroSection />;
+}
+
+export function LaboratorySectionClient() {
+  return <LaboratorySection />;
 }
 
 export function MLOpsDashboardClient() {

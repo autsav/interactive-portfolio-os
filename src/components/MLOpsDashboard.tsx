@@ -31,6 +31,7 @@ export function MLOpsDashboard() {
   const [driftData, setDriftData] = useState(() => flatSeries(20, 5));
   const [selectedModel, setSelectedModel] = useState(MODELS[0]);
   const [mounted, setMounted] = useState(false);
+  const [anomaly, setAnomaly] = useState<string | null>(null);
 
   useEffect(() => {
     // Seed real random data after hydration
@@ -48,10 +49,12 @@ export function MLOpsDashboard() {
         ...d.slice(1),
         { t: d[d.length - 1].t + 1, v: Math.max(20, Math.min(100, d[d.length - 1].v + (Math.random() - 0.5) * 15)) },
       ]);
-      setDriftData((d) => [
-        ...d.slice(1),
-        { t: d[d.length - 1].t + 1, v: Math.max(0, Math.min(30, d[d.length - 1].v + (Math.random() - 0.5) * 4)) },
-      ]);
+      setDriftData((d) => {
+        const next = Math.max(0, Math.min(30, d[d.length - 1].v + (Math.random() - 0.5) * 4));
+        if (next > 18) setAnomaly("Concept Drift Detected in Feature Vector 0x4A");
+        else if (Math.random() > 0.95) setAnomaly(null);
+        return [...d.slice(1), { t: d[d.length - 1].t + 1, v: next }];
+      });
     }, 1200);
     return () => clearInterval(interval);
   }, []);
@@ -76,9 +79,23 @@ export function MLOpsDashboard() {
           MLOps{" "}
           <span className="text-gradient-cool">Dashboard</span>
         </h2>
-        <p className="text-[#5a5a6e] max-w-xl mx-auto">
+        <p className="max-w-xl mx-auto" style={{ color: "var(--fg-muted)" }}>
           Real-time model monitoring with sliding window feature engineering and automated drift detection.
         </p>
+
+        <AnimatePresence>
+          {anomaly && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="mt-6 inline-flex items-center gap-3 px-6 py-3 rounded-2xl border border-red-500/30 bg-red-500/5 text-red-500 text-sm mono mx-auto"
+            >
+              <AlertCircle size={14} className="animate-pulse" />
+              <span>{anomaly}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

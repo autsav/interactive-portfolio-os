@@ -8,6 +8,7 @@ import {
   HeroSectionClient,
   MLOpsDashboardClient,
   AIAssistantClient,
+  LaboratorySectionClient,
 } from "@/components/ClientShell";
 
 export const revalidate = 3600;
@@ -24,6 +25,9 @@ export default async function Home() {
 
       {/* Capability Bento Grid */}
       <BentoSection />
+
+      {/* The Laboratory — agentic workflows */}
+      <LaboratorySectionClient />
 
       {/* Divider */}
       <div className="w-full max-w-5xl mx-auto px-8 my-4">

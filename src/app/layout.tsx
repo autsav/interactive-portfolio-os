@@ -23,9 +23,26 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geistMono.variable} dark`} suppressHydrationWarning>
+      <head>
+        <link rel="mx-manifest" href="/mx.json" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": "Portfolio OS",
+              "jobTitle": "Senior AI Systems Architect",
+              "knowsAbout": ["AI Orchestration", "MLOps", "Full-Stack Development"],
+              "description": "Interactive Portfolio OS of a Senior AI Systems Architect.",
+            }),
+          }}
+        />
+      </head>
       <body suppressHydrationWarning>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
 }
+
