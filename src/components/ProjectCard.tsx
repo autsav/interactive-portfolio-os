@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 import { Star, GitFork, ArrowRight } from "lucide-react";
 import { ProjectInfo } from "@/types/project";
+
+const LANG_FALLBACK = "#FD7024";
 
 interface ProjectCardProps {
   project: ProjectInfo;
   onClick: (project: ProjectInfo) => void;
 }
-
-const LANG_FALLBACK = "#FD7024";
 
 export function ProjectCard({ project, onClick }: ProjectCardProps) {
   const mouseX = useMotionValue(0);
@@ -36,7 +35,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-[1.25rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         style={{
-          background: useMotionTemplate`radial-gradient(350px circle at ${mouseX}px ${mouseY}px, ${color}18, transparent 80%)`,
+          background: useMotionTemplate`radial-gradient(350px circle at ${mouseX}px ${mouseY}px, ${color}10, transparent 80%)`,
         }}
       />
 
@@ -44,20 +43,27 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
         <div className="flex justify-between items-start mb-5">
           <motion.div
             layoutId={`project-icon-${project.id}`}
-            className="w-12 h-12 rounded-xl flex items-center justify-center relative overflow-hidden"
-            style={{ backgroundColor: color + "15", border: `1px solid ${color}30` }}
+            className="w-12 h-12 rounded-xl flex items-center justify-center relative overflow-hidden border transition-colors"
+            style={{ backgroundColor: "var(--orange-dim)", borderColor: "var(--border-card)" }}
           >
-            <div className="absolute inset-0 opacity-20" style={{ backgroundColor: color }} />
-            <span className="font-bold text-white text-lg relative z-10">{project.name.charAt(0)}</span>
+            <span className="font-bold text-lg relative z-10" style={{ color: color }}>
+              {project.name.charAt(0)}
+            </span>
           </motion.div>
 
           <div className="flex gap-2">
-            <div className="flex items-center gap-1 mono text-xs text-[#5a5a6e] bg-white/4 border border-white/6 px-2.5 py-1 rounded-full">
+            <div 
+              className="flex items-center gap-1 mono text-xs px-2.5 py-1 rounded-full border"
+              style={{ color: "var(--fg-muted)", backgroundColor: "var(--bg-card)", borderColor: "var(--border)" }}
+            >
               <Star size={11} className="text-orange-400" fill="currentColor" />
               {project.metrics.stars}
             </div>
             {project.metrics.forks > 0 && (
-              <div className="flex items-center gap-1 mono text-xs text-[#5a5a6e] bg-white/4 border border-white/6 px-2.5 py-1 rounded-full">
+              <div 
+                className="flex items-center gap-1 mono text-xs px-2.5 py-1 rounded-full border"
+                style={{ color: "var(--fg-muted)", backgroundColor: "var(--bg-card)", borderColor: "var(--border)" }}
+              >
                 <GitFork size={11} />
                 {project.metrics.forks}
               </div>
@@ -67,14 +73,16 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
 
         <motion.h3
           layoutId={`project-title-${project.id}`}
-          className="text-xl font-bold text-[#F5ECD7] mb-2 tracking-tight group-hover:text-orange-300 transition-colors"
+          className="text-xl font-bold mb-2 tracking-tight transition-colors group-hover:text-orange-400"
+          style={{ color: "var(--fg)" }}
         >
           {project.name}
         </motion.h3>
 
         <motion.p
           layoutId={`project-desc-${project.id}`}
-          className="text-[#5a5a6e] text-sm line-clamp-2 leading-relaxed"
+          className="text-sm line-clamp-2 leading-relaxed"
+          style={{ color: "var(--fg-muted)" }}
         >
           {project.description}
         </motion.p>
@@ -85,7 +93,8 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           {project.topics.slice(0, 2).map((topic) => (
             <span
               key={topic}
-              className="mono px-2 py-0.5 text-[10px] uppercase tracking-wider font-medium text-[#5a5a6e] bg-white/4 rounded border border-white/6"
+              className="mono px-2 py-0.5 text-[10px] uppercase tracking-wider font-medium rounded border"
+              style={{ color: "var(--fg-muted)", backgroundColor: "var(--bg-card)", borderColor: "var(--border)" }}
             >
               {topic}
             </span>
@@ -100,7 +109,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
             </span>
           )}
         </div>
-        <ArrowRight size={16} className="text-[#5a5a6e] group-hover:text-orange-400 group-hover:translate-x-1 transition-all" />
+        <ArrowRight size={16} style={{ color: "var(--fg-muted)" }} className="group-hover:text-orange-400 group-hover:translate-x-1 transition-all" />
       </div>
     </motion.div>
   );

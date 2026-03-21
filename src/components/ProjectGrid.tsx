@@ -15,11 +15,8 @@ export function ProjectGrid({ projects }: ProjectGridProps) {
   const [selectedProject, setSelectedProject] = useState<ProjectInfo | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>("All");
 
-  // Deduplicate and gather all distinct topics across projects for filtering
   const allTopics = Array.from(new Set(projects.flatMap(p => p.topics))).slice(0, 4);
   const filters = ["All", ...allTopics];
-
-  // Sorting: Prioritize stars, then commits
   const sortedProjects = [...projects].sort((a, b) => b.metrics.stars - a.metrics.stars);
   
   const filteredProjects = activeFilter === "All" 
@@ -36,16 +33,16 @@ export function ProjectGrid({ projects }: ProjectGridProps) {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="flex items-center gap-2 mb-4">
-              <span className="p-2 glass rounded-lg bg-neutral-900 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)]">
-                <Command size={14} className="text-neutral-400" />
+              <span className="p-2 rounded-lg border shadow-sm" style={{ backgroundColor: "var(--orange-dim)", borderColor: "var(--border-hover)" }}>
+                <Command size={14} className="text-orange-400" />
               </span>
-              <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">
+              <span className="text-xs font-mono uppercase tracking-widest" style={{ color: "var(--fg-muted)" }}>
                 Interactive Environment
               </span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white mb-2 max-w-2xl leading-[1.1]">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-2 max-w-2xl leading-[1.1]" style={{ color: "var(--fg)" }}>
               Engineering {" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-200 to-neutral-600">
+              <span className="text-gradient-orange">
                 Outcomes.
               </span>
             </h1>
@@ -55,17 +52,22 @@ export function ProjectGrid({ projects }: ProjectGridProps) {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-wrap gap-2 p-1 bg-neutral-900 rounded-xl border border-neutral-800 self-start md:self-end"
+            className="flex flex-wrap gap-2 p-1 rounded-xl border self-start md:self-end"
+            style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border)" }}
           >
             {filters.map((filter) => (
               <button 
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 capitalize ${
                   activeFilter === filter 
-                    ? "bg-neutral-800 text-white shadow-sm" 
-                    : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
-                } flex items-center gap-2 capitalize`}
+                    ? "shadow-sm active-glow" 
+                    : "hover:bg-white/5"
+                }`}
+                style={{ 
+                  backgroundColor: activeFilter === filter ? "var(--orange)" : "transparent",
+                  color: activeFilter === filter ? "#FFF" : "var(--fg-muted)"
+                }}
               >
                 {filter === "All" && <LayoutGrid size={16} />} {filter}
               </button>
@@ -73,10 +75,7 @@ export function ProjectGrid({ projects }: ProjectGridProps) {
           </motion.div>
         </div>
 
-        <motion.div 
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, i) => (
               <motion.div
@@ -87,20 +86,14 @@ export function ProjectGrid({ projects }: ProjectGridProps) {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
               >
-                <ProjectCard
-                  project={project}
-                  onClick={setSelectedProject}
-                />
+                <ProjectCard project={project} onClick={setSelectedProject} />
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
       </div>
 
-      <ProjectModal
-        project={selectedProject}
-        onClose={() => setSelectedProject(null)}
-      />
+      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
     </>
   );
 }

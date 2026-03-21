@@ -26,11 +26,11 @@ export function ProofMetrics({ projects }: ProofMetricsProps) {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <span className="mono text-xs tracking-[0.4em] text-orange-400/70 uppercase mb-4 block">◈ Telemetry</span>
-        <h2 className="text-4xl font-bold tracking-tighter text-[#F5ECD7] mb-3">
+        <span className="mono text-xs tracking-[0.4em] uppercase mb-4 block" style={{ color: "var(--orange)" }}>◈ Telemetry</span>
+        <h2 className="text-4xl font-bold tracking-tighter mb-3" style={{ color: "var(--fg)" }}>
           Proof <span className="text-gradient-orange">Engine</span>
         </h2>
-        <p className="text-[#5a5a6e] max-w-md mx-auto">No marketing copy. Only validated signals from public repositories.</p>
+        <p className="max-w-md mx-auto" style={{ color: "var(--fg-muted)" }}>No marketing copy. Only validated signals from public repositories.</p>
       </motion.div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -45,7 +45,7 @@ export function ProofMetrics({ projects }: ProofMetricsProps) {
               transition={{ delay: i * 0.1, type: "spring", stiffness: 80 }}
               whileHover={{ y: -4 }}
               className="bento-card p-6 flex flex-col items-center text-center"
-              style={{ background: s.bg, borderColor: s.color + "20" }}
+              style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border)" }}
             >
               <Icon size={24} style={{ color: s.color }} className="mb-4" />
               <span className="text-3xl font-bold mono mb-1" style={{ color: s.color }}>
@@ -53,7 +53,7 @@ export function ProofMetrics({ projects }: ProofMetricsProps) {
                   ? (s.value / 1000).toFixed(1) + "k"
                   : s.value}
               </span>
-              <span className="mono text-[10px] uppercase tracking-wider text-[#5a5a6e]">{s.label}</span>
+              <span className="mono text-[10px] uppercase tracking-wider" style={{ color: "var(--fg-muted)" }}>{s.label}</span>
             </motion.div>
           );
         })}
