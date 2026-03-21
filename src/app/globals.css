@@ -6,49 +6,46 @@
    Defined per-theme so every component can use var()
    ───────────────────────────────────────────────────────── */
 
-/* DARK mode — default fallback + explicit class */
-:root {
+/* DARK mode (Default) */
+:root,
+html.dark {
   --bg:           #070709;
-  --bg-surface:   rgba(12,12,16,0.85);
-  --bg-card:      rgba(12,12,16,0.80);
-  --bg-card-hover:rgba(20,20,28,0.90);
+  --bg-surface:   rgba(12,12,16,0.95);
+  --bg-card:      rgba(15,15,22,0.90);
+  --bg-card-hover:rgba(20,20,30,0.97);
   --fg:           #F5ECD7;
-  --fg-muted:     #5a5a6e;
-  --fg-subtle:    #3a3a4e;
-  --border:       rgba(255,255,255,0.07);
-  --border-card:  rgba(255,255,255,0.07);
-  --border-hover: rgba(253,112,36,0.25);
-  --shadow-card:  0 4px 30px rgba(0,0,0,0.5);
+  --fg-muted:     #9494a5; /* Brightened for dark mode */
+  --fg-subtle:    #5a5a6e;
+  --border:       rgba(255,255,255,0.08);
+  --border-card:  rgba(255,255,255,0.08);
+  --border-hover: rgba(253,112,36,0.30);
+  --shadow-card:  0 10px 40px rgba(0,0,0,0.6);
   --orange:       #FD7024;
   --orange-dim:   rgba(253,112,36,0.12);
-  --orange-glow:  rgba(253,112,36,0.08);
+  --orange-glow:  rgba(253,112,36,0.10);
   --blue:         #3B82F6;
-  --blue-soft:    #60A5FA;
-  --blue-dim:     rgba(59,130,246,0.12);
   --green:        #34d399;
   --purple:       #C084FC;
-  --glass-blur:   blur(16px);
+  --glass-blur:   blur(20px);
 }
 
-/* LIGHT mode — overrides :root when .light class is on <html> */
+/* LIGHT mode — Explicit override */
 html.light {
   --bg:           #F7F3ED;
-  --bg-surface:   rgba(255,252,248,0.95);
+  --bg-surface:   rgba(255,252,248,0.98);
   --bg-card:      rgba(255,252,248,0.90);
   --bg-card-hover:rgba(250,246,240,0.97);
   --fg:           #1C1917;
   --fg-muted:     #78716C;
   --fg-subtle:    #A8A29E;
-  --border:       rgba(28,25,23,0.10);
+  --border:       rgba(28,25,23,0.12);
   --border-card:  rgba(28,25,23,0.08);
-  --border-hover: rgba(253,112,36,0.40);
-  --shadow-card:  0 4px 20px rgba(0,0,0,0.07);
+  --border-hover: rgba(253,112,36,0.45);
+  --shadow-card:  0 8px 30px rgba(0,0,0,0.08);
   --orange:       #E86010;
-  --orange-dim:   rgba(232,96,16,0.10);
-  --orange-glow:  rgba(232,96,16,0.06);
+  --orange-dim:   rgba(232,96,16,0.08);
+  --orange-glow:  rgba(232,96,16,0.05);
   --blue:         #2563EB;
-  --blue-soft:    #3B82F6;
-  --blue-dim:     rgba(37,99,235,0.10);
   --green:        #059669;
   --purple:       #9333EA;
   --glass-blur:   blur(16px);

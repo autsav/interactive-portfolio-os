@@ -80,16 +80,18 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
                 <motion.h2 
                   layoutId={`project-title-${project.id}`} 
-                  className="text-4xl md:text-5xl font-bold tracking-tighter mb-3"
+                  className="text-4xl md:text-5xl font-bold tracking-tighter mb-3 leading-tight"
                   style={{ color: "var(--fg)" }}
                 >
                   {project.name}
                 </motion.h2>
-                <p className="text-lg text-orange-500 font-medium mb-4 italic opacity-80">{project.tagline}</p>
+                <p className="text-lg font-bold mb-4 italic" style={{ color: "var(--orange)" }}>
+                  {project.tagline}
+                </p>
                 <motion.p 
                   layoutId={`project-desc-${project.id}`} 
-                  className="text-base leading-relaxed"
-                  style={{ color: "var(--fg-muted)" }}
+                  className="text-base leading-relaxed opacity-90"
+                  style={{ color: "var(--fg)" }}
                 >
                   {project.description}
                 </motion.p>
@@ -111,7 +113,8 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
                 <div className="flex flex-wrap gap-3">
                   <a href={project.url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-orange-500 text-white hover:bg-orange-400 transition-colors shadow-lg shadow-orange-500/20">
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-orange-500 hover:bg-orange-400 transition-colors shadow-lg shadow-orange-500/20"
+                    style={{ color: "#FFFFFF" }}>
                     <Github size={18} /> Source Code
                   </a>
                   {project.demoUrl && (
@@ -138,9 +141,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     { label: "Forks", value: project.metrics.forks, color: "text-blue-400" },
                     { label: "Commits", value: project.metrics.commits, color: "text-emerald-400" },
                   ].map(({ label, value, color: c }) => (
-                    <div key={label} className="p-4 rounded-2xl border flex flex-col items-center justify-center text-center" style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border)" }}>
+                    <div key={label} className="p-4 rounded-2xl border flex flex-col items-center justify-center text-center shadow-sm" style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border)" }}>
                       <span className={`text-2xl font-bold mono ${c}`}>{value}</span>
-                      <span className="mono text-[10px] uppercase tracking-wider mt-1" style={{ color: "var(--fg-muted)" }}>{label}</span>
+                      <span className="mono text-[10px] uppercase tracking-wider mt-1 font-semibold" style={{ color: "var(--fg-muted)" }}>{label}</span>
                     </div>
                   ))}
                 </div>
@@ -154,7 +157,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                   {project.features.map((f, i) => (
                     <div key={i} className="flex items-start gap-3">
                       <CheckCircle2 size={14} className="text-orange-400 mt-1 shrink-0" />
-                      <span className="text-sm leading-relaxed" style={{ color: "var(--fg-muted)" }}>{f}</span>
+                      <span className="text-sm leading-relaxed font-medium" style={{ color: "var(--fg)" }}>{f}</span>
                     </div>
                   ))}
                 </div>
