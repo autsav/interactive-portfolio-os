@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { LayoutGrid, Github, Twitter, MapPin, Sun, Moon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/ThemeProvider";
 
 export function NavigationBar() {
   const [time, setTime] = useState("");
