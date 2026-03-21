@@ -1,13 +1,14 @@
 import { fetchGithubProjects } from "@/lib/github";
 import { NavigationBar } from "@/components/NavigationBar";
-import { HeroSection } from "@/components/HeroSection";
 import { BentoSection } from "@/components/BentoSection";
 import { ProjectGrid } from "@/components/ProjectGrid";
-import { MLOpsDashboard } from "@/components/MLOpsDashboard";
 import { ProofMetrics } from "@/components/ProofMetrics";
 import { Footer } from "@/components/Footer";
-import { AIAssistant } from "@/components/AIAssistant";
-import { CommandPalette } from "@/components/CommandPalette";
+import {
+  HeroSectionClient,
+  MLOpsDashboardClient,
+  AIAssistantClient,
+} from "@/components/ClientShell";
 
 export const revalidate = 3600;
 
@@ -18,8 +19,8 @@ export default async function Home() {
     <main className="min-h-screen relative overflow-x-hidden" style={{ backgroundColor: "var(--bg)", color: "var(--fg)" }}>
       <NavigationBar />
 
-      {/* Universe Hero */}
-      <HeroSection />
+      {/* Universe Hero — client-only (Three.js + typewriter) */}
+      <HeroSectionClient />
 
       {/* Capability Bento Grid */}
       <BentoSection />
@@ -32,14 +33,14 @@ export default async function Home() {
       {/* Projects Section */}
       <section id="projects" className="py-8">
         <div className="text-center mb-12 px-4">
-          <span className="mono text-xs tracking-[0.4em] text-orange-400/70 uppercase mb-4 block">
+          <span className="mono text-xs tracking-[0.4em] uppercase mb-4 block" style={{ color: "var(--orange)" }}>
             ◈ Project Constellation
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-[#F5ECD7] mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4" style={{ color: "var(--fg)" }}>
             Shipped to{" "}
             <span className="text-gradient-orange">Production</span>
           </h2>
-          <p className="text-[#5a5a6e] max-w-xl mx-auto">
+          <p className="max-w-xl mx-auto" style={{ color: "var(--fg-muted)" }}>
             Click any project to open its case study — challenge, architecture, measurable outcomes.
           </p>
         </div>
@@ -51,9 +52,9 @@ export default async function Home() {
         <div className="h-px bg-gradient-to-r from-transparent via-blue-400/20 to-transparent" />
       </div>
 
-      {/* MLOps Dashboard */}
+      {/* MLOps Dashboard — client-only (live charts with Math.random()) */}
       <section id="mlops">
-        <MLOpsDashboard />
+        <MLOpsDashboardClient />
       </section>
 
       {/* Proof Engine Aggregate Metrics */}
@@ -61,11 +62,8 @@ export default async function Home() {
 
       <Footer />
 
-      {/* Floating AI Assistant */}
-      <AIAssistant />
-
-      {/* Command Palette */}
-      <CommandPalette projects={projects} />
+      {/* AI Assistant + Command Palette — client-only */}
+      <AIAssistantClient projects={projects} />
     </main>
   );
 }

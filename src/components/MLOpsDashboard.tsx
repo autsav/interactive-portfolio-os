@@ -5,7 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { LineChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Activity, AlertCircle, CheckCircle2, Cpu, TrendingDown, TrendingUp } from "lucide-react";
 
-// Generate live chart data
+// Flat deterministic series used for SSR — no Math.random()
+function flatSeries(count = 20, value = 50) {
+  return Array.from({ length: count }, (_, i) => ({ t: i, v: value }));
+}
+
+// Random series only called on the client
 function generateSeries(count = 20, base = 50, noise = 15) {
   return Array.from({ length: count }, (_, i) => ({
     t: i,
@@ -20,15 +25,21 @@ const MODELS = [
 ];
 
 export function MLOpsDashboard() {
-  const [latencyData, setLatencyData] = useState(() => generateSeries(20, 45, 10));
-  const [throughputData, setThroughputData] = useState(() => generateSeries(20, 70, 15));
-  const [driftData, setDriftData] = useState(() => generateSeries(20, 5, 3));
+  // Initialise with flat/deterministic data so SSR and client match
+  const [latencyData, setLatencyData] = useState(() => flatSeries(20, 45));
+  const [throughputData, setThroughputData] = useState(() => flatSeries(20, 70));
+  const [driftData, setDriftData] = useState(() => flatSeries(20, 5));
   const [selectedModel, setSelectedModel] = useState(MODELS[0]);
-  const [tick, setTick] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Seed real random data after hydration
+    setLatencyData(generateSeries(20, 45, 10));
+    setThroughputData(generateSeries(20, 70, 15));
+    setDriftData(generateSeries(20, 5, 3));
+    setMounted(true);
+
     const interval = setInterval(() => {
-      setTick((t) => t + 1);
       setLatencyData((d) => [
         ...d.slice(1),
         { t: d[d.length - 1].t + 1, v: Math.max(5, Math.min(100, d[d.length - 1].v + (Math.random() - 0.5) * 12)) },
@@ -45,9 +56,10 @@ export function MLOpsDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const currentLatency = latencyData[latencyData.length - 1].v.toFixed(0);
-  const currentThroughput = throughputData[throughputData.length - 1].v.toFixed(0);
-  const currentDrift = driftData[driftData.length - 1].v.toFixed(2);
+  // Show placeholders until client has hydrated (avoids mismatched text)
+  const currentLatency = mounted ? latencyData[latencyData.length - 1].v.toFixed(0) : "—";
+  const currentThroughput = mounted ? throughputData[throughputData.length - 1].v.toFixed(0) : "—";
+  const currentDrift = mounted ? driftData[driftData.length - 1].v.toFixed(2) : "—";
 
   return (
     <section className="py-24 px-4 max-w-7xl mx-auto">

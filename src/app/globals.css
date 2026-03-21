@@ -6,9 +6,8 @@
    Defined per-theme so every component can use var()
    ───────────────────────────────────────────────────────── */
 
-/* DARK mode (default — retro-futurist) */
-:root,
-html.dark {
+/* DARK mode — default fallback + explicit class */
+:root {
   --bg:           #070709;
   --bg-surface:   rgba(12,12,16,0.85);
   --bg-card:      rgba(12,12,16,0.80);
@@ -28,23 +27,22 @@ html.dark {
   --blue-dim:     rgba(59,130,246,0.12);
   --green:        #34d399;
   --purple:       #C084FC;
-  --scan-opacity: 0.2;
   --glass-blur:   blur(16px);
 }
 
-/* LIGHT mode — warm cream/ivory */
+/* LIGHT mode — overrides :root when .light class is on <html> */
 html.light {
   --bg:           #F7F3ED;
-  --bg-surface:   rgba(255,252,248,0.92);
-  --bg-card:      rgba(255,252,248,0.88);
-  --bg-card-hover:rgba(250,246,240,0.95);
+  --bg-surface:   rgba(255,252,248,0.95);
+  --bg-card:      rgba(255,252,248,0.90);
+  --bg-card-hover:rgba(250,246,240,0.97);
   --fg:           #1C1917;
   --fg-muted:     #78716C;
   --fg-subtle:    #A8A29E;
   --border:       rgba(28,25,23,0.10);
   --border-card:  rgba(28,25,23,0.08);
   --border-hover: rgba(253,112,36,0.40);
-  --shadow-card:  0 4px 30px rgba(0,0,0,0.08);
+  --shadow-card:  0 4px 20px rgba(0,0,0,0.07);
   --orange:       #E86010;
   --orange-dim:   rgba(232,96,16,0.10);
   --orange-glow:  rgba(232,96,16,0.06);
@@ -53,7 +51,6 @@ html.light {
   --blue-dim:     rgba(37,99,235,0.10);
   --green:        #059669;
   --purple:       #9333EA;
-  --scan-opacity: 0;
   --glass-blur:   blur(16px);
 }
 
@@ -190,4 +187,43 @@ html.light {
     100% { transform: translateY(100vh); }
   }
   .scan-line { animation: scan-line 8s linear infinite; }
+}
+
+/* ─────────────────────────────────────────────────────────
+   LIGHT MODE — override hardcoded dark Tailwind classes
+   so theme switch is visible even in unmigrated components
+   ───────────────────────────────────────────────────────── */
+html.light {
+  /* Page & section backgrounds */
+  background-color: var(--bg);
+
+  /* Catch hardcoded dark text Tailwind classes */
+  .text-\[\#F5ECD7\]  { color: var(--fg) !important; }
+  .text-\[\#5a5a6e\]  { color: var(--fg-muted) !important; }
+  .text-\[\#c8bfaf\]  { color: var(--fg-muted) !important; }
+
+  /* Catch hardcoded dark backgrounds */
+  .bg-\[\#070709\]    { background-color: var(--bg) !important; }
+  .bg-black           { background-color: var(--bg) !important; }
+  .bg-black\/80       { background-color: var(--bg-surface) !important; }
+
+  /* White/border utilities that assume dark bg */
+  .border-white\/5    { border-color: var(--border) !important; }
+  .border-white\/6    { border-color: var(--border) !important; }
+  .border-white\/8    { border-color: var(--border) !important; }
+  .bg-white\/4        { background-color: rgba(0,0,0,0.04) !important; }
+  .bg-white\/3        { background-color: rgba(0,0,0,0.03) !important; }
+  .bg-white\/2        { background-color: rgba(0,0,0,0.02) !important; }
+  .bg-white\/5        { background-color: rgba(0,0,0,0.05) !important; }
+
+  /* Neutral / zinc shades on dark components */
+  .text-neutral-400   { color: var(--fg-muted) !important; }
+  .text-neutral-500   { color: var(--fg-muted) !important; }
+  .text-neutral-600   { color: var(--fg-subtle) !important; }
+  .text-neutral-700   { color: var(--fg-subtle) !important; }
+  .bg-neutral-900     { background-color: rgba(0,0,0,0.05) !important; }
+  .border-neutral-800 { border-color: var(--border) !important; }
+
+  /* MLOps / bento hardcoded dark text */
+  .text-\[\#F5ECD7\], .text-white { color: var(--fg) !important; }
 }
