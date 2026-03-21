@@ -1,51 +1,71 @@
 import { fetchGithubProjects } from "@/lib/github";
-import { ProjectGrid } from "@/components/ProjectGrid";
 import { NavigationBar } from "@/components/NavigationBar";
+import { HeroSection } from "@/components/HeroSection";
+import { BentoSection } from "@/components/BentoSection";
+import { ProjectGrid } from "@/components/ProjectGrid";
+import { MLOpsDashboard } from "@/components/MLOpsDashboard";
 import { ProofMetrics } from "@/components/ProofMetrics";
-import { TechMarquee } from "@/components/TechMarquee";
-import { CommandPalette } from "@/components/CommandPalette";
-import { HeroTerminal } from "@/components/HeroTerminal";
 import { Footer } from "@/components/Footer";
+import { AIAssistant } from "@/components/AIAssistant";
+import { CommandPalette } from "@/components/CommandPalette";
 
-export const revalidate = 3600; // revalidate every hour
+export const revalidate = 3600;
 
 export default async function Home() {
   const projects = await fetchGithubProjects();
 
   return (
-    <main className="min-h-screen bg-black text-white relative flex flex-col items-center pt-24 overflow-x-hidden selection:bg-blue-500/30">
-      <div className="hero-glow absolute inset-0 mix-blend-screen opacity-50" />
-      
+    <main className="min-h-screen bg-[#070709] text-[#F5ECD7] relative overflow-x-hidden">
       <NavigationBar />
-      
-      {/* Background Decor */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neutral-800 to-transparent" />
-      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
-      
-      <div className="w-full flex flex-col items-center z-10">
-        
-        {/* Terminal Boot Sequence (Upgrade) */}
-        <div className="w-full max-w-4xl px-4 mt-8 mb-16">
-          <HeroTerminal />
-        </div>
 
-        {/* Tech Marquee (Upgrade) */}
-        <div className="w-full mt-4 mb-8">
-          <TechMarquee />
-        </div>
-        
-        {/* Main Content */}
-        <div className="w-full flex-grow relative flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ProjectGrid projects={projects} />
-          
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-neutral-800 to-transparent my-16 max-w-4xl mx-auto" />
-          
-          <ProofMetrics projects={projects} />
-        </div>
-        
-        <Footer />
-        <CommandPalette projects={projects} />
+      {/* Universe Hero */}
+      <HeroSection />
+
+      {/* Capability Bento Grid */}
+      <BentoSection />
+
+      {/* Divider */}
+      <div className="w-full max-w-5xl mx-auto px-8 my-4">
+        <div className="h-px bg-gradient-to-r from-transparent via-orange-400/20 to-transparent" />
       </div>
+
+      {/* Projects Section */}
+      <section id="projects" className="py-8">
+        <div className="text-center mb-12 px-4">
+          <span className="mono text-xs tracking-[0.4em] text-orange-400/70 uppercase mb-4 block">
+            ◈ Project Constellation
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-[#F5ECD7] mb-4">
+            Shipped to{" "}
+            <span className="text-gradient-orange">Production</span>
+          </h2>
+          <p className="text-[#5a5a6e] max-w-xl mx-auto">
+            Click any project to open its case study — challenge, architecture, measurable outcomes.
+          </p>
+        </div>
+        <ProjectGrid projects={projects} />
+      </section>
+
+      {/* Divider */}
+      <div className="w-full max-w-5xl mx-auto px-8 my-16">
+        <div className="h-px bg-gradient-to-r from-transparent via-blue-400/20 to-transparent" />
+      </div>
+
+      {/* MLOps Dashboard */}
+      <section id="mlops">
+        <MLOpsDashboard />
+      </section>
+
+      {/* Proof Engine Aggregate Metrics */}
+      <ProofMetrics projects={projects} />
+
+      <Footer />
+
+      {/* Floating AI Assistant */}
+      <AIAssistant />
+
+      {/* Command Palette */}
+      <CommandPalette projects={projects} />
     </main>
   );
 }

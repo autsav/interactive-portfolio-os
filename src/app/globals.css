@@ -1,79 +1,159 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
+
 @theme {
-  --color-background: #000000;
-  --color-foreground: #ededed;
-  --color-card: rgba(20, 20, 20, 0.6);
-  --color-card-border: rgba(255, 255, 255, 0.08);
-  --color-card-hover: rgba(35, 35, 35, 0.8);
-  --color-accent: #ffffff;
-  --color-muted: #888888;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
+  --font-mono: "IBM Plex Mono", monospace;
+  --font-sans: "IBM Plex Sans", sans-serif;
+
+  /* Retro-futurist palette */
+  --color-orange:         #FD7024;
+  --color-orange-dim:     rgba(253,112,36,0.15);
+  --color-orange-glow:    rgba(253,112,36,0.08);
+  --color-blue:           #3B82F6;
+  --color-blue-soft:      #60A5FA;
+  --color-blue-dim:       rgba(59,130,246,0.15);
+  --color-cream:          #F5ECD7;
+  --color-cream-dim:      rgba(245,236,215,0.06);
+  --color-bg:             #070709;
+  --color-surface:        rgba(12,12,16,0.85);
+  --color-border:         rgba(255,255,255,0.07);
+  --color-border-hot:     rgba(253,112,36,0.3);
+  --color-muted:          #5a5a6e;
 }
 
 @layer base {
-  :root {
-    --background: #000000;
-    --foreground: #ededed;
-  }
-}
+  *, *::before, *::after { box-sizing: border-box; }
 
-@layer base {
+  html { scroll-behavior: smooth; }
+
   body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: #070709;
+    color: #F5ECD7;
+    font-family: "IBM Plex Sans", sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
-  
-  /* Custom scrollbar for premium feel */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+
+  ::selection {
+    background: rgba(253,112,36,0.3);
+    color: #fff;
   }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(253,112,36,0.3);
     border-radius: 10px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(253,112,36,0.5);
   }
 }
 
 @layer utilities {
+  /* Glass surfaces */
   .glass {
-    background: rgba(10, 10, 10, 0.4);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .glass-card {
-    background: linear-gradient(180deg, rgba(30, 30, 30, 0.4) 0%, rgba(10, 10, 10, 0.6) 100%);
+    background: rgba(12,12,16,0.7);
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.07);
   }
-  
-  .text-gradient {
-    background-clip: text;
+
+  .glass-orange {
+    background: rgba(253,112,36,0.05);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(253,112,36,0.2);
+  }
+
+  /* Text utilities */
+  .text-gradient-orange {
+    background: linear-gradient(135deg, #FD7024 0%, #FF9A5C 50%, #FFD4B3 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-image: linear-gradient(180deg, #fff, #999);
+    background-clip: text;
   }
-  
-  .hero-glow {
-    position: absolute;
-    width: 60vw;
-    height: 60vw;
-    background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0) 70%);
-    top: -30vw;
-    left: 20vw;
-    z-index: -1;
-    pointer-events: none;
+
+  .text-gradient-cool {
+    background: linear-gradient(135deg, #60A5FA 0%, #C084FC 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glow effects */
+  .glow-orange {
+    box-shadow: 0 0 30px rgba(253,112,36,0.15), 0 0 80px rgba(253,112,36,0.05);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 30px rgba(59,130,246,0.15), 0 0 80px rgba(59,130,246,0.05);
+  }
+
+  .text-glow-orange {
+    text-shadow: 0 0 20px rgba(253,112,36,0.6);
+  }
+
+  /* Mono label */
+  .mono {
+    font-family: "IBM Plex Mono", monospace;
+  }
+
+  /* Bento card base */
+  .bento-card {
+    background: rgba(12,12,16,0.8);
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    border-radius: 1.25rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .bento-card:hover {
+    border-color: rgba(253,112,36,0.25);
+    box-shadow: 0 0 40px rgba(253,112,36,0.06);
+  }
+
+  /* Orange hairline */
+  .hairline-orange {
+    border-top: 1px solid rgba(253,112,36,0.2);
+  }
+
+  /* Caustic shimmer animation */
+  @keyframes caustic {
+    0%, 100% { opacity: 0.04; transform: scale(1) rotate(0deg); }
+    33%       { opacity: 0.07; transform: scale(1.1) rotate(5deg); }
+    66%       { opacity: 0.03; transform: scale(0.95) rotate(-3deg); }
+  }
+
+  .caustic-light {
+    animation: caustic 8s ease-in-out infinite;
+  }
+
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-12px); }
+  }
+
+  .float-slow {
+    animation: float-slow 6s ease-in-out infinite;
+  }
+
+  @keyframes pulse-orange {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(253,112,36,0.4); }
+    50%       { box-shadow: 0 0 0 8px rgba(253,112,36,0); }
+  }
+
+  .pulse-orange {
+    animation: pulse-orange 2s ease-in-out infinite;
+  }
+
+  @keyframes scan-line {
+    0%  { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+  }
+
+  .scan-line {
+    animation: scan-line 8s linear infinite;
   }
 }
