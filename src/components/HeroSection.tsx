@@ -66,7 +66,9 @@ export function HeroSection() {
           transition={{ duration: 0.6 }}
           className="mb-6"
         >
-          <span className="mono text-xs tracking-[0.4em] text-orange-400 uppercase border border-orange-400/30 bg-orange-400/5 px-4 py-2 rounded-full inline-block">
+          <span className="mono text-xs tracking-[0.4em] uppercase border px-4 py-2 rounded-full inline-block"
+          style={{ color: "var(--orange)", borderColor: "var(--border-hover)", backgroundColor: "var(--orange-dim)" }}
+        >
             ◈ Interactive Project OS &nbsp;·&nbsp; Initializing
           </span>
         </motion.div>
@@ -79,7 +81,7 @@ export function HeroSection() {
         >
           <span className="text-gradient-orange">Engineering</span>
           <br />
-          <span className="text-[#F5ECD7]">the Future</span>
+          <span style={{ color: "var(--fg)" }}>the Future</span>
         </motion.h1>
 
         <motion.div
@@ -88,8 +90,8 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="text-xl md:text-2xl text-[#5a5a6e] mb-12 mono h-8"
         >
-          &gt; <span ref={roleRef} className="text-blue-400" />
-          <span className="animate-pulse text-orange-400">_</span>
+          &gt; <span ref={roleRef} style={{ color: "var(--blue-soft)" }} />
+          <span className="animate-pulse" style={{ color: "var(--orange)" }}>_</span>
         </motion.div>
 
         <motion.div
@@ -114,7 +116,7 @@ export function HeroSection() {
       </div>
 
       {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#070709] to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none" style={{ background: "linear-gradient(to top, var(--bg), transparent)" }} />
 
       {/* Scroll hint */}
       <motion.div
@@ -123,7 +125,7 @@ export function HeroSection() {
         transition={{ delay: 1.5 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="mono text-[10px] tracking-[0.3em] text-[#5a5a6e] uppercase">Scroll to navigate</span>
+        <span className="mono text-[10px] tracking-[0.3em] uppercase" style={{ color: "var(--fg-muted)" }}>Scroll to navigate</span>
         <div className="w-px h-12 bg-gradient-to-b from-orange-400/50 to-transparent" />
       </motion.div>
     </section>

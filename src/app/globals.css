@@ -1,159 +1,193 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────
+   CSS CUSTOM PROPERTIES
+   Defined per-theme so every component can use var()
+   ───────────────────────────────────────────────────────── */
 
+/* DARK mode (default — retro-futurist) */
+:root,
+html.dark {
+  --bg:           #070709;
+  --bg-surface:   rgba(12,12,16,0.85);
+  --bg-card:      rgba(12,12,16,0.80);
+  --bg-card-hover:rgba(20,20,28,0.90);
+  --fg:           #F5ECD7;
+  --fg-muted:     #5a5a6e;
+  --fg-subtle:    #3a3a4e;
+  --border:       rgba(255,255,255,0.07);
+  --border-card:  rgba(255,255,255,0.07);
+  --border-hover: rgba(253,112,36,0.25);
+  --shadow-card:  0 4px 30px rgba(0,0,0,0.5);
+  --orange:       #FD7024;
+  --orange-dim:   rgba(253,112,36,0.12);
+  --orange-glow:  rgba(253,112,36,0.08);
+  --blue:         #3B82F6;
+  --blue-soft:    #60A5FA;
+  --blue-dim:     rgba(59,130,246,0.12);
+  --green:        #34d399;
+  --purple:       #C084FC;
+  --scan-opacity: 0.2;
+  --glass-blur:   blur(16px);
+}
+
+/* LIGHT mode — warm cream/ivory */
+html.light {
+  --bg:           #F7F3ED;
+  --bg-surface:   rgba(255,252,248,0.92);
+  --bg-card:      rgba(255,252,248,0.88);
+  --bg-card-hover:rgba(250,246,240,0.95);
+  --fg:           #1C1917;
+  --fg-muted:     #78716C;
+  --fg-subtle:    #A8A29E;
+  --border:       rgba(28,25,23,0.10);
+  --border-card:  rgba(28,25,23,0.08);
+  --border-hover: rgba(253,112,36,0.40);
+  --shadow-card:  0 4px 30px rgba(0,0,0,0.08);
+  --orange:       #E86010;
+  --orange-dim:   rgba(232,96,16,0.10);
+  --orange-glow:  rgba(232,96,16,0.06);
+  --blue:         #2563EB;
+  --blue-soft:    #3B82F6;
+  --blue-dim:     rgba(37,99,235,0.10);
+  --green:        #059669;
+  --purple:       #9333EA;
+  --scan-opacity: 0;
+  --glass-blur:   blur(16px);
+}
+
+/* ─────────────────────────────────────────────────────────
+   TAILWIND THEME TOKENS (static, non-theme-sensitive)
+   ───────────────────────────────────────────────────────── */
 @theme {
   --font-mono: "IBM Plex Mono", monospace;
   --font-sans: "IBM Plex Sans", sans-serif;
-
-  /* Retro-futurist palette */
-  --color-orange:         #FD7024;
-  --color-orange-dim:     rgba(253,112,36,0.15);
-  --color-orange-glow:    rgba(253,112,36,0.08);
-  --color-blue:           #3B82F6;
-  --color-blue-soft:      #60A5FA;
-  --color-blue-dim:       rgba(59,130,246,0.15);
-  --color-cream:          #F5ECD7;
-  --color-cream-dim:      rgba(245,236,215,0.06);
-  --color-bg:             #070709;
-  --color-surface:        rgba(12,12,16,0.85);
-  --color-border:         rgba(255,255,255,0.07);
-  --color-border-hot:     rgba(253,112,36,0.3);
-  --color-muted:          #5a5a6e;
 }
 
+/* ─────────────────────────────────────────────────────────
+   BASE STYLES
+   ───────────────────────────────────────────────────────── */
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
 
   html { scroll-behavior: smooth; }
 
   body {
-    background-color: #070709;
-    color: #F5ECD7;
+    background-color: var(--bg);
+    color: var(--fg);
     font-family: "IBM Plex Sans", sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.4s ease, color 0.3s ease;
   }
 
   ::selection {
-    background: rgba(253,112,36,0.3);
-    color: #fff;
+    background: rgba(253,112,36,0.25);
+    color: var(--fg);
   }
 
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: rgba(253,112,36,0.3);
+    background: var(--orange-dim);
     border-radius: 10px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(253,112,36,0.5);
+    background: var(--orange-dim);
   }
 }
 
+/* ─────────────────────────────────────────────────────────
+   UTILITY CLASSES  (theme-aware via CSS vars)
+   ───────────────────────────────────────────────────────── */
 @layer utilities {
-  /* Glass surfaces */
+  /* Glass / surface */
   .glass {
-    background: rgba(12,12,16,0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: var(--bg-surface);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border);
   }
 
   .glass-orange {
-    background: rgba(253,112,36,0.05);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(253,112,36,0.2);
+    background: var(--orange-dim);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-hover);
   }
 
-  /* Text utilities */
+  /* Bento card */
+  .bento-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  }
+
+  .bento-card:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 0 30px var(--orange-glow);
+  }
+
+  /* Gradients */
   .text-gradient-orange {
-    background: linear-gradient(135deg, #FD7024 0%, #FF9A5C 50%, #FFD4B3 100%);
+    background: linear-gradient(135deg, var(--orange) 0%, #FF9A5C 50%, #FFD4B3 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .text-gradient-cool {
-    background: linear-gradient(135deg, #60A5FA 0%, #C084FC 100%);
+    background: linear-gradient(135deg, var(--blue-soft) 0%, var(--purple) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Glow effects */
+  /* Glows */
   .glow-orange {
-    box-shadow: 0 0 30px rgba(253,112,36,0.15), 0 0 80px rgba(253,112,36,0.05);
+    box-shadow: 0 0 30px var(--orange-dim), 0 0 80px var(--orange-glow);
   }
 
   .glow-blue {
-    box-shadow: 0 0 30px rgba(59,130,246,0.15), 0 0 80px rgba(59,130,246,0.05);
+    box-shadow: 0 0 30px var(--blue-dim), 0 0 80px rgba(59,130,246,0.04);
   }
 
-  .text-glow-orange {
-    text-shadow: 0 0 20px rgba(253,112,36,0.6);
-  }
+  /* Monospace text */
+  .mono { font-family: "IBM Plex Mono", monospace; }
 
-  /* Mono label */
-  .mono {
-    font-family: "IBM Plex Mono", monospace;
-  }
-
-  /* Bento card base */
-  .bento-card {
-    background: rgba(12,12,16,0.8);
-    border: 1px solid rgba(255,255,255,0.06);
-    backdrop-filter: blur(20px);
-    border-radius: 1.25rem;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .bento-card:hover {
-    border-color: rgba(253,112,36,0.25);
-    box-shadow: 0 0 40px rgba(253,112,36,0.06);
-  }
-
-  /* Orange hairline */
+  /* orange hairline */
   .hairline-orange {
-    border-top: 1px solid rgba(253,112,36,0.2);
+    border-top: 1px solid var(--border-hover);
   }
 
-  /* Caustic shimmer animation */
+  /* Caustic animation */
   @keyframes caustic {
     0%, 100% { opacity: 0.04; transform: scale(1) rotate(0deg); }
     33%       { opacity: 0.07; transform: scale(1.1) rotate(5deg); }
     66%       { opacity: 0.03; transform: scale(0.95) rotate(-3deg); }
   }
-
-  .caustic-light {
-    animation: caustic 8s ease-in-out infinite;
-  }
+  .caustic-light { animation: caustic 8s ease-in-out infinite; }
 
   @keyframes float-slow {
     0%, 100% { transform: translateY(0px); }
     50%       { transform: translateY(-12px); }
   }
-
-  .float-slow {
-    animation: float-slow 6s ease-in-out infinite;
-  }
+  .float-slow { animation: float-slow 6s ease-in-out infinite; }
 
   @keyframes pulse-orange {
     0%, 100% { box-shadow: 0 0 0 0 rgba(253,112,36,0.4); }
     50%       { box-shadow: 0 0 0 8px rgba(253,112,36,0); }
   }
-
-  .pulse-orange {
-    animation: pulse-orange 2s ease-in-out infinite;
-  }
+  .pulse-orange { animation: pulse-orange 2s ease-in-out infinite; }
 
   @keyframes scan-line {
-    0%  { transform: translateY(-100%); }
+    0%   { transform: translateY(-100%); }
     100% { transform: translateY(100vh); }
   }
-
-  .scan-line {
-    animation: scan-line 8s linear infinite;
-  }
+  .scan-line { animation: scan-line 8s linear infinite; }
 }

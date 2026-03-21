@@ -15,7 +15,7 @@ export default async function Home() {
   const projects = await fetchGithubProjects();
 
   return (
-    <main className="min-h-screen bg-[#070709] text-[#F5ECD7] relative overflow-x-hidden">
+    <main className="min-h-screen relative overflow-x-hidden" style={{ backgroundColor: "var(--bg)", color: "var(--fg)" }}>
       <NavigationBar />
 
       {/* Universe Hero */}

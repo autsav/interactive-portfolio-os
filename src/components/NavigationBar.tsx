@@ -1,16 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { LayoutGrid, Github, Twitter, MapPin, ExternalLink } from "lucide-react";
+import { motion } from "framer-motion";
+import { LayoutGrid, Github, Twitter, MapPin, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export function NavigationBar() {
   const [time, setTime] = useState("");
   const [scrolled, setScrolled] = useState(false);
-
-  const { scrollY } = useScroll();
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
+    setMounted(true);
     const interval = setInterval(() => {
       setTime(
         new Date().toLocaleTimeString("en-US", {
@@ -31,6 +33,10 @@ export function NavigationBar() {
     };
   }, []);
 
+  function toggleTheme() {
+    setTheme(theme === "dark" ? "light" : "dark");
+  }
+
   return (
     <motion.header
       initial={{ y: -50, opacity: 0 }}
@@ -41,41 +47,81 @@ export function NavigationBar() {
       <nav
         className={`flex items-center justify-between gap-6 md:gap-10 px-6 py-3 rounded-full w-full max-w-4xl transition-all duration-300 ${
           scrolled
-            ? "bg-[#070709]/90 backdrop-blur-xl border border-white/8 shadow-[0_0_30px_rgba(253,112,36,0.08)]"
+            ? "glass shadow-[0_0_30px_var(--orange-glow)]"
             : "bg-transparent border border-transparent"
         }`}
       >
         {/* Left: Brand */}
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full border border-orange-400/40 bg-orange-400/10 flex items-center justify-center shadow-[0_0_15px_rgba(253,112,36,0.3)]">
-            <LayoutGrid size={16} className="text-orange-400" />
+          <div
+            className="w-8 h-8 rounded-full border flex items-center justify-center"
+            style={{ borderColor: "var(--border-hover)", backgroundColor: "var(--orange-dim)" }}
+          >
+            <LayoutGrid size={16} style={{ color: "var(--orange)" }} />
           </div>
           <div className="hidden sm:flex flex-col">
-            <span className="font-semibold text-sm leading-tight text-[#F5ECD7] tracking-tight">Interactive OS</span>
-            <span className="mono text-[10px] text-emerald-400 flex items-center gap-1.5 tracking-widest uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Available for Hire
+            <span className="font-semibold text-sm leading-tight tracking-tight" style={{ color: "var(--fg)" }}>
+              Interactive OS
+            </span>
+            <span className="mono text-[10px] flex items-center gap-1.5 tracking-widest uppercase" style={{ color: "var(--green)" }}>
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "var(--green)" }} />
+              Available for Hire
             </span>
           </div>
         </div>
 
-        {/* Center: Links */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-[#5a5a6e]">
-          <a href="#bento" className="hover:text-orange-400 transition-colors duration-200">Capabilities</a>
-          <a href="#projects" className="hover:text-orange-400 transition-colors duration-200">Projects</a>
-          <a href="#mlops" className="hover:text-orange-400 transition-colors duration-200">MLOps</a>
+        {/* Center: Nav Links */}
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium" style={{ color: "var(--fg-muted)" }}>
+          <a href="#bento" className="transition-colors hover:opacity-70">Capabilities</a>
+          <a href="#projects" className="transition-colors hover:opacity-70">Projects</a>
+          <a href="#mlops" className="transition-colors hover:opacity-70">MLOps</a>
         </div>
 
-        {/* Right: Time + Links */}
-        <div className="flex items-center gap-3 border-l border-white/8 pl-4">
-          <div className="hidden sm:flex items-center gap-1.5 mono text-xs text-[#5a5a6e] bg-white/3 border border-white/6 px-3 py-1.5 rounded-full">
-            <MapPin size={10} className="text-orange-400/60" /> NYC {time || "--:--"}
+        {/* Right: Time + Theme Toggle + Socials */}
+        <div className="flex items-center gap-2 border-l pl-4" style={{ borderColor: "var(--border)" }}>
+          {/* Clock */}
+          <div
+            className="hidden sm:flex items-center gap-1.5 mono text-xs px-3 py-1.5 rounded-full"
+            style={{ color: "var(--fg-muted)", backgroundColor: "var(--orange-dim)", border: "1px solid var(--border)" }}
+          >
+            <MapPin size={10} style={{ color: "var(--orange)" }} />
+            NYC {time || "--:--"}
           </div>
-          <a href="https://github.com/autsav" target="_blank" rel="noopener noreferrer"
-            className="w-8 h-8 flex items-center justify-center rounded-full text-[#5a5a6e] hover:text-orange-400 hover:bg-orange-400/10 transition-colors">
+
+          {/* Theme Toggle — only rendered client-side to avoid hydration mismatch */}
+          {mounted && (
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={toggleTheme}
+              aria-label="Toggle colour theme"
+              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+              style={{ color: "var(--fg-muted)" }}
+            >
+              {theme === "dark"
+                ? <Sun size={16} style={{ color: "var(--orange)" }} />
+                : <Moon size={16} style={{ color: "var(--fg-muted)" }} />
+              }
+            </motion.button>
+          )}
+
+          <a
+            href="https://github.com/autsav"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-60"
+            style={{ color: "var(--fg-muted)" }}
+          >
             <Github size={16} />
           </a>
-          <a href="https://twitter.com/autsav" target="_blank" rel="noopener noreferrer"
-            className="w-8 h-8 flex items-center justify-center rounded-full text-[#5a5a6e] hover:text-orange-400 hover:bg-orange-400/10 transition-colors">
+          <a
+            href="https://twitter.com/autsav"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-60"
+            style={{ color: "var(--fg-muted)" }}
+          >
             <Twitter size={16} />
           </a>
         </div>

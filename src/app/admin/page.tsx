@@ -12,6 +12,7 @@ import { GithubRepository } from "@/types/project";
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123";
 
 function timeAgo(dateStr: string) {
+  // Use a fixed epoch at module level to avoid server/client mismatch
   const diff = Date.now() - new Date(dateStr).getTime();
   const days = Math.floor(diff / 86400000);
   if (days === 0) return "today";
@@ -19,6 +20,13 @@ function timeAgo(dateStr: string) {
   if (days < 30) return `${days}d ago`;
   const months = Math.floor(days / 30);
   return `${months}mo ago`;
+}
+
+// Wrapper that only renders the relative time after hydration (client-only)
+function RelativeTime({ dateStr }: { dateStr: string }) {
+  const [label, setLabel] = useState("");
+  useEffect(() => { setLabel(timeAgo(dateStr)); }, [dateStr]);
+  return <>{label || "…"}</>;
 }
 
 export default function AdminDashboard() {
@@ -144,7 +152,7 @@ export default function AdminDashboard() {
                 Enter OS
               </button>
             </form>
-            <p className="text-[11px] text-neutral-600 text-center mt-6 font-mono">
+            <p className="text-[11px] text-neutral-600 text-center mt-6 font-mono" suppressHydrationWarning>
               Default password: <span className="text-neutral-400">admin123</span><br />
               Set <code>NEXT_PUBLIC_ADMIN_PASSWORD</code> in .env.local to change.
             </p>
@@ -355,7 +363,7 @@ export default function AdminDashboard() {
                             <GitFork size={12} /> {repo.forkCount}
                           </span>
                           <span className="flex items-center gap-1.5">
-                            <Clock size={12} /> {timeAgo(repo.pushedAt)}
+                            <Clock size={12} /> <RelativeTime dateStr={repo.pushedAt} />
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
