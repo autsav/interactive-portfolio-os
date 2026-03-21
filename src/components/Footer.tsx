@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Twitter, Mail, Terminal } from "lucide-react";
+import { Github, Twitter, Mail, Terminal, MessageSquare } from "lucide-react";
 
 export function Footer() {
   return (
@@ -41,6 +41,13 @@ export function Footer() {
             <Github size={14} /> GitHub
           </a>
           <a
+            href="https://wa.me/447810563580"
+            target="_blank"
+            className="transition-colors flex items-center gap-2 hover:opacity-60"
+          >
+            <MessageSquare size={14} /> WhatsApp
+          </a>
+          <a
             href="https://twitter.com/autsav"
             target="_blank"
             className="transition-colors flex items-center gap-2 hover:opacity-60"
@@ -48,7 +55,7 @@ export function Footer() {
             <Twitter size={14} /> Twitter
           </a>
           <a
-            href="mailto:contact@autsav.com"
+            href="mailto:autsav73@gmail.com"
             className="transition-colors flex items-center gap-2 hover:opacity-60"
           >
             <Mail size={14} /> Contact
