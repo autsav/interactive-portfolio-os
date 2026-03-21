@@ -33,12 +33,12 @@ export function HeroSectionClient() {
   return <HeroSection />;
 }
 
-export function LaboratorySectionClient() {
-  return <LaboratorySection />;
+export function LaboratorySectionClient({ projects }: { projects: ProjectInfo[] }) {
+  return <LaboratorySection projects={projects} />;
 }
 
-export function MLOpsDashboardClient() {
-  return <MLOpsDashboard />;
+export function MLOpsDashboardClient({ projects }: { projects: ProjectInfo[] }) {
+  return <MLOpsDashboard projects={projects} />;
 }
 
 export function AIAssistantClient({ projects }: { projects: ProjectInfo[] }) {

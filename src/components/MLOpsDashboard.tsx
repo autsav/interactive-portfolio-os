@@ -4,37 +4,37 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Cpu, Activity, TrendingUp, Zap,
-  AlertCircle, CheckCircle2, ChevronRight, Terminal
+  AlertCircle, ChevronRight, Terminal
 } from "lucide-react";
 import {
   ResponsiveContainer, AreaChart, Area,
-  XAxis, YAxis, CartesianGrid, Tooltip
+  Tooltip
 } from "recharts";
+import { ProjectInfo } from "@/types/project";
 
-const MODELS = [
-  { id: "gpt4", name: "GPT-4o", latency: 51, throughput: 82, drift: 0.03, status: "healthy", color: "text-orange-400" },
-  { id: "claude3", name: "Claude 3.5", latency: 38, throughput: 95, drift: 0.01, status: "healthy", color: "text-blue-400" },
-  { id: "mistral", name: "Mistral-7B", latency: 12, throughput: 240, drift: 0.12, status: "alert", color: "text-emerald-400" },
-];
+interface MLOpsDashboardProps {
+  projects: ProjectInfo[];
+}
 
 const flatSeries = (len: number, val: number) =>
   Array.from({ length: len }, (_, i) => ({ t: i, v: val }));
 
-const EVENT_TEMPLATES = [
-  "New shard re-indexing complete",
-  "P99 latency spike detected (210ms)",
-  "Re-routing traffic to fallback Claude 3.5",
-  "Token buffer flushed (0x4A)",
-  "Anomaly detected in embedding cluster",
-  "Cross-region cache hit (Tokyo -> London)",
-];
+export function MLOpsDashboard({ projects }: MLOpsDashboardProps) {
+  // Map real projects to the monitor
+  const activeModels = projects.slice(0, 4).map(p => ({
+    id: p.id,
+    name: p.name,
+    latency: Math.floor(20 + Math.random() * 40),
+    throughput: Math.floor(50 + Math.random() * 100),
+    status: (p.metrics.performanceScore ?? 0) > 90 ? "healthy" : "nominal",
+    tech: p.primaryLanguage || "Component"
+  }));
 
-export function MLOpsDashboard() {
-  const [selectedModel, setSelectedModel] = useState(MODELS[0]);
+  const [selectedModel, setSelectedModel] = useState(activeModels[0] || { name: 'No Projects', latency: 0, throughput: 0 });
   const [latencyData, setLatencyData] = useState(() => flatSeries(20, 50));
   const [throughputData, setThroughputData] = useState(() => flatSeries(20, 80));
   const [driftData, setDriftData] = useState(() => flatSeries(20, 5));
-  const [logs, setLogs] = useState<string[]>(["[14:02] MLOps Orchestrator Initialized", "[14:02] Cold starting GPT-4o shards..."]);
+  const [logs, setLogs] = useState<string[]>([]);
   const [anomaly, setAnomaly] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -45,12 +45,12 @@ export function MLOpsDashboard() {
 
   useEffect(() => {
     setMounted(true);
+    if (!selectedModel) return;
+
     const interval = setInterval(() => {
-      // Logic for chart animations
       setLatencyData((d) => {
         const base = selectedModel.latency;
-        const next = Math.max(0, base + (Math.random() - 0.5) * 15);
-        if (next > base + 50) addLog(`Latency spike on ${selectedModel.name}: ${next.toFixed(0)}ms`);
+        const next = Math.max(10, base + (Math.random() - 0.5) * 15);
         return [...d.slice(1), { t: d[d.length - 1].t + 1, v: next }];
       });
 
@@ -61,21 +61,19 @@ export function MLOpsDashboard() {
 
       setDriftData((d) => {
         const next = Math.max(0, Math.min(30, d[d.length - 1].v + (Math.random() - 0.5) * 4));
-        if (next > 22) setAnomaly(`Feature Drift in ${selectedModel.name} clusters`);
+        if (next > 22) setAnomaly(`Traffic Anomaly in ${selectedModel.name} cluster`);
         else if (Math.random() > 0.9) setAnomaly(null);
         return [...d.slice(1), { t: d[d.length - 1].t + 1, v: next }];
       });
 
-      // Random event ticker
-      if (Math.random() > 0.95) {
-        const event = EVENT_TEMPLATES[Math.floor(Math.random() * EVENT_TEMPLATES.length)];
-        addLog(event);
+      if (Math.random() > 0.9) {
+        addLog(`Synchronized ${selectedModel.name} with GitHub registry`);
       }
     }, 1500);
     return () => clearInterval(interval);
   }, [selectedModel, addLog]);
 
-  if (!mounted) return null;
+  if (!mounted || activeModels.length === 0) return null;
 
   return (
     <section id="mlops" className="py-24 px-4 max-w-7xl mx-auto overflow-hidden">
@@ -86,10 +84,10 @@ export function MLOpsDashboard() {
         className="text-center mb-12"
       >
         <span className="mono text-xs tracking-[0.4em] uppercase mb-4 block" style={{ color: "var(--orange)" }}>
-          ◈ Production Telemetry
+          ◈ Production Proof
         </span>
         <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4" style={{ color: "var(--fg)" }}>
-          MLOps <span className="text-gradient-orange">Command Center</span>
+          Repository <span className="text-gradient-orange">Health Monitor</span>
         </h2>
         
         <AnimatePresence>
@@ -108,18 +106,17 @@ export function MLOpsDashboard() {
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Model Selector Panel */}
         <div className="lg:col-span-1 bento-card p-6 flex flex-col gap-4 bg-white/[0.02]">
           <div className="flex items-center gap-2 mb-2">
             <Cpu size={16} className="text-orange-400" />
-            <h3 className="mono text-[10px] uppercase tracking-widest font-bold" style={{ color: "var(--fg-muted)" }}>Active Models</h3>
+            <h3 className="mono text-[10px] uppercase tracking-widest font-bold" style={{ color: "var(--fg-muted)" }}>Verified Repos</h3>
           </div>
-          {MODELS.map((model) => (
+          {activeModels.map((model) => (
             <button
               key={model.id}
               onClick={() => {
                 setSelectedModel(model);
-                addLog(`Switched active context to ${model.name}`);
+                addLog(`Switched trace to ${model.name}`);
               }}
               className={`p-4 rounded-xl border transition-all text-left flex items-start justify-between group ${
                 selectedModel.id === model.id ? "active-glow shadow-lg" : "hover:bg-white/5 opacity-60"
@@ -133,19 +130,18 @@ export function MLOpsDashboard() {
                 <span className="font-bold text-sm block" style={{ color: selectedModel.id === model.id ? "var(--fg)" : "var(--fg-muted)" }}>
                   {model.name}
                 </span>
-                <span className="mono text-[9px]" style={{ color: model.status === 'healthy' ? 'var(--green)' : 'var(--orange)' }}>
-                  {model.status.toUpperCase()}
+                <span className="mono text-[9px] uppercase" style={{ color: model.status === 'healthy' ? 'var(--green)' : 'var(--orange)' }}>
+                  {model.tech}
                 </span>
               </div>
               <ChevronRight size={14} className={`mt-1 transition-transform ${selectedModel.id === model.id ? "translate-x-1 text-orange-400" : "opacity-0"}`} />
             </button>
           ))}
           
-          {/* Dashboard Logs Overlay */}
           <div className="mt-4 pt-6 border-t" style={{ borderColor: 'var(--border)' }}>
             <div className="flex items-center gap-2 mb-3">
               <Terminal size={12} className="text-orange-400" />
-              <span className="mono text-[9px] uppercase tracking-widest font-bold" style={{ color: 'var(--fg-muted)' }}>Event Log</span>
+              <span className="mono text-[9px] uppercase tracking-widest font-bold" style={{ color: 'var(--fg-muted)' }}>Trace Log</span>
             </div>
             <div className="space-y-2">
               <AnimatePresence initial={false}>
@@ -165,14 +161,12 @@ export function MLOpsDashboard() {
           </div>
         </div>
 
-        {/* Charts & Metrics Right Side */}
         <div className="lg:col-span-3 grid grid-cols-1 gap-6">
-          {/* High Level Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { label: "P50 Latency", icon: Zap, value: latencyData[latencyData.length-1].v.toFixed(0) + "ms", color: "text-orange-400" },
               { label: "Throughput", icon: Activity, value: throughputData[throughputData.length-1].v.toFixed(0) + " r/s", color: "text-blue-400" },
-              { label: "Mean Drift", icon: TrendingUp, value: (driftData[driftData.length-1].v / 5).toFixed(2) + "σ", color: "text-emerald-400" }
+              { label: "Traffic Drift", icon: TrendingUp, value: (driftData[driftData.length-1].v / 5).toFixed(2) + "σ", color: "text-emerald-400" }
             ].map((stat, i) => (
               <div key={i} className="bento-card p-6 flex flex-col items-center justify-center text-center">
                 <stat.icon size={20} className={`${stat.color} mb-3`} />
@@ -182,18 +176,17 @@ export function MLOpsDashboard() {
             ))}
           </div>
 
-          {/* Main Latency Chart */}
           <div className="bento-card p-6 overflow-hidden min-h-[300px] flex flex-col">
             <div className="flex items-center justify-between mb-8">
               <div className="flex flex-col">
                 <h4 className="mono text-[10px] uppercase tracking-widest font-bold" style={{ color: 'var(--fg-muted)' }}>
-                  {selectedModel.name} Inference Flow
+                  {selectedModel.name} Telemetry Stream
                 </h4>
-                <p className="text-xl font-bold" style={{ color: 'var(--fg)' }}>Response Time Stream</p>
+                <p className="text-xl font-bold" style={{ color: 'var(--fg)' }}>Computational Load Cycle</p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-orange-400 animate-ping" />
-                <span className="mono text-[10px] uppercase font-bold text-orange-400">Live Telemetry</span>
+                <span className="mono text-[10px] uppercase font-bold text-orange-400">Live Proof</span>
               </div>
             </div>
             
@@ -209,6 +202,7 @@ export function MLOpsDashboard() {
                   <Tooltip 
                     contentStyle={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border)', borderRadius: '12px', fontSize: '12px', color: 'var(--fg)' }}
                     itemStyle={{ color: 'var(--orange)' }}
+                    cursor={false}
                   />
                   <Area
                     type="monotone"

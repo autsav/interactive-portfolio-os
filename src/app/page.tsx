@@ -27,7 +27,7 @@ export default async function Home() {
       <BentoSection />
 
       {/* The Laboratory — agentic workflows */}
-      <LaboratorySectionClient />
+      <LaboratorySectionClient projects={projects} />
 
       {/* Divider */}
       <div className="w-full max-w-5xl mx-auto px-8 my-4">
@@ -58,7 +58,7 @@ export default async function Home() {
 
       {/* MLOps Dashboard — client-only (live charts with Math.random()) */}
       <section id="mlops">
-        <MLOpsDashboardClient />
+        <MLOpsDashboardClient projects={projects} />
       </section>
 
       {/* Proof Engine Aggregate Metrics */}
