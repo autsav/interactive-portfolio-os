@@ -16,7 +16,7 @@ export function NavigationBar() {
     const interval = setInterval(() => {
       setTime(
         new Date().toLocaleTimeString("en-US", {
-          timeZone: "America/New_York",
+          timeZone: "Europe/London",
           hour12: true,
           hour: "numeric",
           minute: "2-digit",
@@ -82,11 +82,11 @@ export function NavigationBar() {
         <div className="flex items-center gap-2 border-l pl-4" style={{ borderColor: "var(--border)" }}>
           {/* Clock */}
           <div
-            className="hidden sm:flex items-center gap-1.5 mono text-xs px-3 py-1.5 rounded-full border"
+            className="hidden sm:flex items-center gap-1.5 mono text-xs px-3 py-1.5 rounded-full border shadow-sm"
             style={{ color: "var(--fg-muted)", backgroundColor: "var(--orange-dim)", borderColor: "var(--border)" }}
           >
             <MapPin size={10} style={{ color: "var(--orange)" }} />
-            NYC {time || "--:--"}
+            LONDON {time || "--:--"}
           </div>
 
           {/* Theme Toggle */}
