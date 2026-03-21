@@ -2,13 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, X, Send, Bot, User, Minimize2 } from "lucide-react";
+import { MessageSquare, X, Send, Bot, User } from "lucide-react";
 
 interface Message { role: "user" | "assistant"; content: string; }
 
 const STARTERS = [
   "What are your strongest skills?",
-  "Tell me about AuraOS",
+  "Tell me about your projects",
   "How do you approach MLOps?",
   "Are you available to hire?",
 ];
@@ -70,25 +70,34 @@ export function AIAssistant() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className="fixed bottom-6 right-6 z-[60] w-full max-w-sm flex flex-col overflow-hidden rounded-2xl border border-orange-500/20 shadow-[0_0_60px_rgba(253,112,36,0.15)]"
-            style={{ background: "rgba(10,10,14,0.97)", backdropFilter: "blur(20px)", height: "520px" }}
+            className="fixed bottom-6 right-6 z-[60] w-full max-w-sm flex flex-col overflow-hidden rounded-2xl border shadow-2xl"
+            style={{ 
+              backgroundColor: "var(--bg-surface)", 
+              borderColor: "var(--border)",
+              backdropFilter: "var(--glass-blur)",
+              height: "520px" 
+            }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+            <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
+                <div 
+                  className="w-8 h-8 rounded-full flex items-center justify-center border"
+                  style={{ backgroundColor: "var(--orange-dim)", borderColor: "var(--border-hover)" }}
+                >
                   <Bot size={16} className="text-orange-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-[#F5ECD7]">AI Second Brain</p>
-                  <p className="mono text-[10px] text-emerald-400 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block pulse-orange" /> RAG Active
+                  <p className="text-sm font-semibold" style={{ color: "var(--fg)" }}>AI Second Brain</p>
+                  <p className="mono text-[10px] flex items-center gap-1" style={{ color: "var(--green)" }}>
+                    <span className="w-1.5 h-1.5 rounded-full inline-block animate-pulse" style={{ backgroundColor: "var(--green)" }} /> RAG Active
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 text-[#5a5a6e] hover:text-white transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-full transition-colors hover:bg-white/5"
+                style={{ color: "var(--fg-muted)" }}
               >
                 <X size={16} />
               </button>
@@ -98,20 +107,20 @@ export function AIAssistant() {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 border ${
                     msg.role === "assistant"
-                      ? "bg-orange-500/20 border border-orange-500/30"
-                      : "bg-blue-500/20 border border-blue-500/30"
+                      ? "bg-orange-500/10 border-orange-500/20"
+                      : "bg-blue-500/10 border-blue-500/20"
                   }`}>
                     {msg.role === "assistant"
                       ? <Bot size={14} className="text-orange-400" />
                       : <User size={14} className="text-blue-400" />}
                   </div>
-                  <div className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                  <div className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed border ${
                     msg.role === "assistant"
-                      ? "bg-white/4 border border-white/6 text-[#c8bfaf]"
-                      : "bg-orange-500/10 border border-orange-500/20 text-[#F5ECD7]"
-                  }`}>
+                      ? "bg-white/4"
+                      : "bg-orange-500/10"
+                  }`} style={{ color: "var(--fg)", borderColor: "var(--border)" }}>
                     {msg.content}
                   </div>
                 </div>
@@ -119,14 +128,18 @@ export function AIAssistant() {
 
               {loading && (
                 <div className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center bg-orange-500/20 border border-orange-500/30">
+                  <div 
+                    className="w-7 h-7 rounded-full flex items-center justify-center border"
+                    style={{ backgroundColor: "var(--orange-dim)", borderColor: "var(--border-hover)" }}
+                  >
                     <Bot size={14} className="text-orange-400" />
                   </div>
-                  <div className="px-4 py-3 rounded-2xl bg-white/4 border border-white/6 flex gap-1 items-center">
+                  <div className="px-4 py-3 rounded-2xl flex gap-1 items-center bg-white/4 border" style={{ borderColor: "var(--border)" }}>
                     {[0, 0.2, 0.4].map((d) => (
                       <motion.div
                         key={d}
-                        className="w-1.5 h-1.5 rounded-full bg-orange-400"
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ backgroundColor: "var(--orange)" }}
                         animate={{ opacity: [0.3, 1, 0.3], y: [0, -4, 0] }}
                         transition={{ duration: 0.8, repeat: Infinity, delay: d }}
                       />
@@ -144,7 +157,8 @@ export function AIAssistant() {
                   <button
                     key={s}
                     onClick={() => send(s)}
-                    className="mono text-[10px] border border-orange-400/20 hover:border-orange-400/50 text-orange-400/70 hover:text-orange-400 px-3 py-1.5 rounded-full transition-colors"
+                    className="mono text-[10px] border px-3 py-1.5 rounded-full transition-colors"
+                    style={{ borderColor: "var(--border-hover)", color: "var(--orange)", backgroundColor: "var(--orange-dim)" }}
                   >
                     {s}
                   </button>
@@ -153,23 +167,25 @@ export function AIAssistant() {
             )}
 
             {/* Input */}
-            <div className="p-4 border-t border-white/5">
+            <div className="p-4 border-t" style={{ borderColor: "var(--border)" }}>
               <form
                 onSubmit={(e) => { e.preventDefault(); send(); }}
-                className="flex gap-3 items-center bg-white/4 border border-white/8 rounded-xl px-4 py-2"
+                className="flex gap-3 items-center border rounded-xl px-4 py-2 bg-white/4"
+                style={{ borderColor: "var(--border)" }}
               >
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask about projects, skills, availability..."
-                  className="flex-1 bg-transparent text-sm text-[#F5ECD7] placeholder-[#5a5a6e] focus:outline-none mono"
+                  placeholder="Ask a question..."
+                  className="flex-1 bg-transparent text-sm focus:outline-none mono"
+                  style={{ color: "var(--fg)" }}
                   disabled={loading}
                 />
                 <button
                   type="submit"
                   disabled={!input.trim() || loading}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg bg-orange-500 hover:bg-orange-400 text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors shrink-0"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg bg-orange-500 hover:bg-orange-400 text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors shrink-0 shadow-lg"
                 >
                   <Send size={14} />
                 </button>

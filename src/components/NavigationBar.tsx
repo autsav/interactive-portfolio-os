@@ -45,11 +45,12 @@ export function NavigationBar() {
       className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-6 px-4"
     >
       <nav
-        className={`flex items-center justify-between gap-6 md:gap-10 px-6 py-3 rounded-full w-full max-w-4xl transition-all duration-300 ${
+        className={`flex items-center justify-between gap-6 md:gap-10 px-6 py-3 rounded-full w-full max-w-4xl transition-all duration-300 border ${
           scrolled
             ? "glass shadow-[0_0_30px_var(--orange-glow)]"
-            : "bg-transparent border border-transparent"
+            : "bg-transparent border-transparent"
         }`}
+        style={{ borderColor: scrolled ? "var(--border)" : "transparent" }}
       >
         {/* Left: Brand */}
         <div className="flex items-center gap-3">
@@ -72,23 +73,23 @@ export function NavigationBar() {
 
         {/* Center: Nav Links */}
         <div className="hidden md:flex items-center gap-8 text-sm font-medium" style={{ color: "var(--fg-muted)" }}>
-          <a href="#bento" className="transition-colors hover:opacity-70">Capabilities</a>
-          <a href="#projects" className="transition-colors hover:opacity-70">Projects</a>
-          <a href="#mlops" className="transition-colors hover:opacity-70">MLOps</a>
+          <a href="#bento" className="transition-colors hover:opacity-70 focus:opacity-60">Capabilities</a>
+          <a href="#projects" className="transition-colors hover:opacity-70 focus:opacity-60">Projects</a>
+          <a href="#mlops" className="transition-colors hover:opacity-70 focus:opacity-60">MLOps</a>
         </div>
 
         {/* Right: Time + Theme Toggle + Socials */}
         <div className="flex items-center gap-2 border-l pl-4" style={{ borderColor: "var(--border)" }}>
           {/* Clock */}
           <div
-            className="hidden sm:flex items-center gap-1.5 mono text-xs px-3 py-1.5 rounded-full"
-            style={{ color: "var(--fg-muted)", backgroundColor: "var(--orange-dim)", border: "1px solid var(--border)" }}
+            className="hidden sm:flex items-center gap-1.5 mono text-xs px-3 py-1.5 rounded-full border"
+            style={{ color: "var(--fg-muted)", backgroundColor: "var(--orange-dim)", borderColor: "var(--border)" }}
           >
             <MapPin size={10} style={{ color: "var(--orange)" }} />
             NYC {time || "--:--"}
           </div>
 
-          {/* Theme Toggle — only rendered client-side to avoid hydration mismatch */}
+          {/* Theme Toggle */}
           {mounted && (
             <motion.button
               whileHover={{ scale: 1.1 }}
@@ -96,7 +97,7 @@ export function NavigationBar() {
               onClick={toggleTheme}
               aria-label="Toggle colour theme"
               title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-              className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-full transition-colors hover:bg-orange-500/5"
               style={{ color: "var(--fg-muted)" }}
             >
               {theme === "dark"

@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 import {
-  Brain, Cpu, Globe, Zap, GitBranch, Server,
-  TrendingUp, Shield, Code2, Database
+  Brain, Zap, Code2, Database,
+  Server, Shield, Globe
 } from "lucide-react";
 
 const bentoItems = [
@@ -11,7 +11,7 @@ const bentoItems = [
     id: "ai-core",
     title: "AI Systems",
     subtitle: "LLMs · RAG · Agents",
-    description: "Production-grade AI pipelines with LangChain, vector stores, and agentic orchestration across diverse model backends.",
+    description: "Production-grade AI pipelines with LangChain, vector stores, and agentic orchestration.",
     icon: Brain,
     color: "#FD7024",
     bg: "bg-orange-500/5",
@@ -23,7 +23,7 @@ const bentoItems = [
     id: "infra",
     title: "Infra & MLOps",
     subtitle: "Docker · K8s · CI/CD",
-    description: "Automated model deployment, drift detection, and real-time monitoring pipelines.",
+    description: "Automated model deployment and drift detection.",
     icon: Server,
     color: "#60A5FA",
     bg: "bg-blue-500/5",
@@ -35,7 +35,7 @@ const bentoItems = [
     id: "perf",
     title: "Performance",
     subtitle: "< 50ms P99 latency",
-    description: "Optimized token routing and quantized inference on edge hardware.",
+    description: "Optimized token routing and quantized inference.",
     icon: Zap,
     color: "#FD7024",
     bg: "bg-orange-500/5",
@@ -47,7 +47,7 @@ const bentoItems = [
     id: "fullstack",
     title: "Full-Stack Dev",
     subtitle: "Next.js · TypeScript",
-    description: "End-to-end product engineering from system design to pixel-perfect UI.",
+    description: "End-to-end product engineering from system design to UI.",
     icon: Code2,
     color: "#C084FC",
     bg: "bg-purple-500/5",
@@ -59,7 +59,7 @@ const bentoItems = [
     id: "data",
     title: "Data Engineering",
     subtitle: "PostgreSQL · Spark",
-    description: "Streaming pipelines, feature stores, and real-time data systems at scale.",
+    description: "Streaming pipelines and feature stores at scale.",
     icon: Database,
     color: "#34d399",
     bg: "bg-emerald-500/5",
@@ -71,7 +71,7 @@ const bentoItems = [
     id: "security",
     title: "Ethical AI",
     subtitle: "Privacy · Governance",
-    description: "Confidential computing, federated learning, and transparent model explainability.",
+    description: "Confidential computing and federated learning.",
     icon: Shield,
     color: "#60A5FA",
     bg: "bg-blue-500/5",
@@ -83,7 +83,7 @@ const bentoItems = [
     id: "scale",
     title: "Scale",
     subtitle: "Global Distribution",
-    description: "CDN-first architectures deployed across 50+ regions.",
+    description: "CDN-first architectures across 50+ regions.",
     icon: Globe,
     color: "#FD7024",
     bg: "bg-orange-500/5",
@@ -110,14 +110,14 @@ export function BentoSection() {
         viewport={{ once: true }}
         className="text-center mb-16"
       >
-        <span className="mono text-xs tracking-[0.4em] text-orange-400/70 uppercase mb-4 block">
+        <span className="mono text-xs tracking-[0.4em] uppercase mb-4 block" style={{ color: "var(--orange)" }}>
           ◈ Capability Matrix
         </span>
-        <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-[#F5ECD7] mb-4">
+        <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4" style={{ color: "var(--fg)" }}>
           Built to{" "}
           <span className="text-gradient-orange">Operate</span>
         </h2>
-        <p className="text-[#5a5a6e] max-w-xl mx-auto text-lg">
+        <p className="max-w-xl mx-auto text-lg" style={{ color: "var(--fg-muted)" }}>
           A senior systems architect who ships — from prototype to production, week 1.
         </p>
       </motion.div>
@@ -132,13 +132,13 @@ export function BentoSection() {
         {STATS.map((stat) => (
           <div key={stat.label} className="bento-card px-6 py-5 text-center">
             <p className="text-3xl font-bold text-gradient-orange mb-1 mono">{stat.value}</p>
-            <p className="text-xs text-[#5a5a6e] uppercase tracking-wider mono">{stat.label}</p>
+            <p className="text-xs uppercase tracking-wider mono" style={{ color: "var(--fg-muted)" }}>{stat.label}</p>
           </div>
         ))}
       </motion.div>
 
       {/* Bento Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[8rem]">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[8.5rem] md:auto-rows-[10rem]">
         {bentoItems.map((item, i) => {
           const Icon = item.icon;
           return (
@@ -149,8 +149,7 @@ export function BentoSection() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.07, type: "spring", stiffness: 80 }}
               whileHover={{ y: -4 }}
-              className={`bento-card p-6 flex flex-col justify-between relative overflow-hidden group cursor-default
-                ${item.size} ${item.bg} ${item.border} border`}
+              className={`bento-card p-6 flex flex-col justify-between relative overflow-hidden group cursor-default ${item.size}`}
             >
               {/* Hover glow */}
               <div
@@ -158,27 +157,27 @@ export function BentoSection() {
                 style={{ background: `radial-gradient(circle at 50% 50%, ${item.color}08, transparent 70%)` }}
               />
 
-              <div>
+              <div className="relative z-10">
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                  style={{ backgroundColor: item.color + "15", border: `1px solid ${item.color}30` }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors"
+                  style={{ backgroundColor: "var(--orange-dim)", border: `1px solid var(--border-card)` }}
                 >
                   <Icon size={20} style={{ color: item.color }} />
                 </div>
-                <h3 className="font-bold text-[#F5ECD7] text-lg leading-tight mb-1">{item.title}</h3>
-                <p className="mono text-xs" style={{ color: item.color + "bb" }}>{item.subtitle}</p>
+                <h3 className="font-bold text-lg leading-tight mb-1" style={{ color: "var(--fg)" }}>{item.title}</h3>
+                <p className="mono text-[11px] font-semibold" style={{ color: item.color }}>{item.subtitle}</p>
               </div>
 
               {item.accent && (
-                <p className="text-[#5a5a6e] text-sm leading-relaxed mt-3">{item.description}</p>
+                <p className="text-sm leading-relaxed mt-3 relative z-10" style={{ color: "var(--fg-muted)" }}>
+                  {item.description}
+                </p>
               )}
 
               {/* Corner decoration */}
               <div
                 className="absolute bottom-0 right-0 w-16 h-16 opacity-10"
-                style={{
-                  background: `radial-gradient(circle at 100% 100%, ${item.color}, transparent)`,
-                }}
+                style={{ background: `radial-gradient(circle at 100% 100%, ${item.color}, transparent)` }}
               />
             </motion.div>
           );

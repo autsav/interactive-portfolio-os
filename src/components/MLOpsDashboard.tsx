@@ -103,7 +103,7 @@ export function MLOpsDashboard() {
         <div className="bento-card p-6 flex flex-col gap-4">
           <div className="flex items-center gap-2 mb-2">
             <Cpu size={16} className="text-orange-400" />
-            <h3 className="mono text-xs uppercase tracking-widest text-[#5a5a6e]">Active Models</h3>
+            <h3 className="mono text-xs uppercase tracking-widest" style={{ color: "var(--fg-muted)" }}>Active Models</h3>
           </div>
           {MODELS.map((model) => (
             <button
@@ -116,14 +116,14 @@ export function MLOpsDashboard() {
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-sm text-[#F5ECD7]">{model.name}</span>
+                <span className="font-semibold text-sm" style={{ color: "var(--fg)" }}>{model.name}</span>
                 {model.status === "healthy" ? (
                   <CheckCircle2 size={14} className="text-emerald-400" />
                 ) : (
                   <AlertCircle size={14} className="text-yellow-400" />
                 )}
               </div>
-              <div className="mono text-[10px] text-[#5a5a6e] space-y-1">
+              <div className="mono text-[10px] space-y-1" style={{ color: "var(--fg-muted)" }}>
                 <div>Avg p50: <span className="text-blue-400">{model.latency}ms</span></div>
                 <div>Drift: <span className={model.drift > 0.1 ? "text-yellow-400" : "text-emerald-400"}>{model.drift}</span></div>
               </div>
@@ -148,7 +148,7 @@ export function MLOpsDashboard() {
                   </div>
                   <Icon size={16} className={`${stat.color} mx-auto mb-2`} />
                   <div className={`text-xl font-bold mono ${stat.color} mb-1`}>{stat.value}</div>
-                  <div className="mono text-[10px] text-[#5a5a6e] uppercase tracking-wider">{stat.label}</div>
+                  <div className="mono text-[10px] uppercase tracking-wider" style={{ color: "var(--fg-muted)" }}>{stat.label}</div>
                 </div>
               );
             })}
@@ -157,7 +157,7 @@ export function MLOpsDashboard() {
           {/* Latency Chart */}
           <div className="bento-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="mono text-xs uppercase tracking-widest text-[#5a5a6e]">Inference Latency — Sliding Window (1s)</h4>
+              <h4 className="mono text-xs uppercase tracking-widest" style={{ color: "var(--fg-muted)" }}>Inference Latency — Sliding Window (1s)</h4>
               <span className="mono text-[10px] text-orange-400 border border-orange-400/30 px-2 py-0.5 rounded-full">LIVE</span>
             </div>
             <ResponsiveContainer width="100%" height={120}>
