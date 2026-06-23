@@ -9,15 +9,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://utsabadhikari.com"),
   title: "Utsab Adhikari | Full-stack & AI Engineer",
   description:
     "Full-stack and backend engineer in London building AI agents, APIs and web apps with TypeScript/Node and Python. Open to visa-sponsored UK roles.",
   keywords: ["Utsab Adhikari", "Full-stack Developer", "Backend Developer", "AI Engineer", "Next.js", "Python", "TypeScript", "London"],
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Utsab Adhikari — Full-stack & AI Engineer",
     description:
       "Real projects with live demos, and live GitHub stats. Full-stack & backend engineer in London.",
+    url: "https://utsabadhikari.com",
+    siteName: "Utsab Adhikari",
     type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Utsab Adhikari — Full-stack & AI Engineer",
+    description:
+      "Real projects with live demos and live GitHub stats. Based in London.",
+    creator: "@UtsabAdhikari5",
   },
 };
 

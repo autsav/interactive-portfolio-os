@@ -8,6 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { MotionConfig } from "framer-motion";
 
 type Theme = "dark" | "light";
 
@@ -48,7 +49,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
-      {children}
+      {/* reducedMotion="user" makes every Framer Motion animation honour the
+          OS prefers-reduced-motion setting, site-wide. */}
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
     </ThemeContext.Provider>
   );
 }
