@@ -1,245 +1,196 @@
-import { ProjectInfo, GithubRepository } from "../types/project";
-import { readFeatured } from "./featured";
+import { FeaturedMeta, FeaturedProject, GithubData } from "@/types/project";
 
-const GITHUB_USERNAME = "autsav"; // the user's username identified earlier 'autsav'
+const USERNAME = "autsav";
+const API = "https://api.github.com";
 
-const GITHUB_GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
+// Cache for a day. GitHub's unauthenticated REST limit is 60 req/hr and we hit
+// "403 rate limit exceeded" in testing, so we make at most two calls per
+// revalidation window and degrade gracefully (em dashes) on any failure.
+const REVALIDATE_SECONDS = 86400;
 
-// A fallback dataset for the "Proof Engine" to look amazing even without a token
-const MOCK_PROJECTS: ProjectInfo[] = [
+/**
+ * The featured set, chosen with the site owner. The prose is taken from each
+ * repo's own README — claims I can defend in an interview. All live numbers
+ * (stars/forks/language) are merged in from the API; none are written here.
+ */
+const FEATURED: FeaturedMeta[] = [
   {
-    id: "mock1",
-    name: "AuraOS",
-    slug: "aura-os",
-    tagline: "The open-source generative UI layer.",
-    description:
-      "AuraOS is an interactive generative interface built to process complex workflows and distill them into simplified actions for everyday users. Powered by deep integrations with LLMs.",
-    url: "https://github.com/autsav/auraos",
-    demoUrl: "https://auraos.demo",
-    metrics: {
-      stars: 4200,
-      forks: 342,
-      commits: 1205,
-      contributors: 14,
-      performanceScore: 99,
-      users: "10k+",
-    },
-    topics: ["ai", "react", "nextjs", "generative-ui"],
-    primaryLanguage: "TypeScript",
-    primaryLanguageColor: "#3178c6",
-    updatedAt: new Date().toISOString(),
-    features: [
-      "Real-time token streaming & parsing",
-      "Dynamic component rendering engine",
-      "Sub-50ms latency architecture",
-    ],
+    repo: "ai-lms",
+    displayName: "AI LMS",
+    problem: "Generic online courses don't adapt to where a learner actually is.",
+    whatsLive:
+      "Claude generates curriculum modules and quizzes; quiz scores update a running mastery signal, with a realtime WebSocket AI tutor.",
+    stack: ["React", "TypeScript", "Vite", "FastAPI", "Anthropic Claude", "Supabase"],
+    liveUrl: "https://ai-lms-olive.vercel.app",
   },
   {
-    id: "mock2",
-    name: "EchoEngine",
-    slug: "echo-engine",
-    tagline: "High-throughput audio synthesis.",
-    description:
-      "A distributed pipeline for continuous audio generation. EchoEngine processes text to speech over web sockets with adaptive buffering.",
-    url: "https://github.com/autsav/echoengine",
-    demoUrl: null,
-    metrics: {
-      stars: 1850,
-      forks: 121,
-      commits: 830,
-      contributors: 3,
-      performanceScore: 95,
-      users: "2.5k+",
-    },
-    topics: ["audio", "rust", "websocket", "ai"],
-    primaryLanguage: "Rust",
-    primaryLanguageColor: "#dea584",
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
-    features: [
-      "Zero-copy memory management",
-      "Adaptive bitrate streaming",
-      "Concurrent user isolated sessions",
-    ],
+    repo: "Citation-generator",
+    displayName: "CiteSnap",
+    problem: "Formatting academic references by hand is slow and error-prone.",
+    whatsLive:
+      "Generates APA, MLA and Harvard citations for books, journals, websites and newspapers — multi-author, one-click copy, auto-saved history, no signup.",
+    stack: ["JavaScript", "HTML", "CSS"],
+    liveUrl: "https://citation-generator-one.vercel.app",
   },
   {
-    id: "mock3",
-    name: "NexusDB",
-    slug: "nexus-db",
-    tagline: "Vector search made simple.",
-    description:
-      "An in-memory vector database built for edge computing environments, providing low latency queries with high precision.",
-    url: "https://github.com/autsav/nexusdb",
-    demoUrl: "https://nexusdb.io",
-    metrics: {
-      stars: 3105,
-      forks: 215,
-      commits: 1543,
-      contributors: 22,
-      performanceScore: 98,
-      users: "15k+",
-    },
-    topics: ["database", "vector", "edge", "c++"],
-    primaryLanguage: "C++",
-    primaryLanguageColor: "#f34b7d",
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 12).toISOString(),
-    features: [
-      "HNSW index variations",
-      "JIT compiled query plans",
-      "Hot-standby replication",
-    ],
+    repo: "ai-influencer-generator",
+    displayName: "AI Influencer Generator",
+    problem: "Keeping an AI persona visually consistent across many generated images is hard.",
+    whatsLive:
+      "Full-stack app to create consistent AI influencer identities and generate images, with async image jobs (Celery/Redis) and S3-compatible storage.",
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "FastAPI", "Celery", "PostgreSQL"],
+    liveUrl: "https://ai-influencer-generator.vercel.app",
   },
 ];
 
-export async function fetchGithubProjects(): Promise<ProjectInfo[]> {
+// Minimal colour lookup for primary languages (REST doesn't return colours).
+// Falls back to the brand orange when a language isn't listed.
+const LANGUAGE_COLORS: Record<string, string> = {
+  TypeScript: "#3178c6",
+  JavaScript: "#f1e05a",
+  Python: "#3572A5",
+  HTML: "#e34c26",
+  CSS: "#563d7c",
+  PHP: "#4F5D95",
+  Blade: "#f7523f",
+  "Jupyter Notebook": "#DA5B0B",
+};
+
+interface RestRepo {
+  id: number;
+  node_id: string;
+  name: string;
+  description: string | null;
+  html_url: string;
+  homepage: string | null;
+  stargazers_count: number;
+  forks_count: number;
+  language: string | null;
+  topics?: string[];
+  fork: boolean;
+  pushed_at: string;
+}
+
+interface RestUser {
+  name: string | null;
+  login: string;
+  html_url: string;
+  followers: number;
+  following: number;
+  public_repos: number;
+}
+
+function headers(): HeadersInit {
+  const h: Record<string, string> = { Accept: "application/vnd.github+json" };
+  // Optional: a token lifts the rate limit. Read from env only; never committed.
   const token = process.env.GITHUB_TOKEN;
+  if (token) h.Authorization = `Bearer ${token}`;
+  return h;
+}
 
-  // We rely on fallback if token is missing
-  if (!token) {
-    console.warn("No GITHUB_TOKEN found, falling back to mock projects.");
-    return MOCK_PROJECTS;
-  }
+/** A featured card that still renders (working links) when the API is down. */
+function fallbackFeatured(meta: FeaturedMeta): FeaturedProject {
+  return {
+    ...meta,
+    id: `featured-${meta.repo}`,
+    repoUrl: `https://github.com/${USERNAME}/${meta.repo}`,
+    description: null,
+    primaryLanguage: null,
+    primaryLanguageColor: null,
+    topics: [],
+    stars: null,
+    forks: null,
+    pushedAt: null,
+  };
+}
 
-  const query = `
-    query {
-      user(login: "${GITHUB_USERNAME}") {
-        repositories(first: 20, orderBy: {field: STARGAZERS, direction: DESC}, privacy: PUBLIC, isFork: false) {
-          nodes {
-            id
-            name
-            description
-            url
-            homepageUrl
-            stargazerCount
-            forkCount
-            pushedAt
-            repositoryTopics(first: 5) {
-              nodes {
-                topic {
-                  name
-                }
-              }
-            }
-            primaryLanguage {
-              name
-              color
-            }
-            defaultBranchRef {
-              target {
-                ... on Commit {
-                  history(first: 1) {
-                    totalCount
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  `;
+function emptyData(): GithubData {
+  return {
+    ok: false,
+    profile: null,
+    totalStars: null,
+    topLanguages: [],
+    featured: FEATURED.map(fallbackFeatured),
+  };
+}
 
+/**
+ * Single source of truth for the page. Fetches the public profile and repo
+ * list, derives aggregate proof signals, and merges live metrics into the
+ * featured set. Never throws, never invents numbers: on failure it returns
+ * `ok: false` with nulls so the UI can show em dashes while links keep working.
+ */
+export async function getGithubData(): Promise<GithubData> {
   try {
-    const res = await fetch(GITHUB_GRAPHQL_ENDPOINT, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ query }),
-      next: { revalidate: 3600 },
+    const [userRes, reposRes] = await Promise.all([
+      fetch(`${API}/users/${USERNAME}`, {
+        headers: headers(),
+        next: { revalidate: REVALIDATE_SECONDS },
+      }),
+      fetch(`${API}/users/${USERNAME}/repos?per_page=100&sort=updated`, {
+        headers: headers(),
+        next: { revalidate: REVALIDATE_SECONDS },
+      }),
+    ]);
+
+    if (!userRes.ok || !reposRes.ok) return emptyData();
+
+    const user = (await userRes.json()) as RestUser;
+    const repos = (await reposRes.json()) as RestRepo[];
+    if (!Array.isArray(repos)) return emptyData();
+
+    const sourceRepos = repos.filter((r) => !r.fork);
+
+    // Aggregate proof signals (real, often small — that's the point).
+    const totalStars = sourceRepos.reduce((sum, r) => sum + r.stargazers_count, 0);
+
+    const langCounts = new Map<string, number>();
+    for (const r of sourceRepos) {
+      if (!r.language) continue;
+      langCounts.set(r.language, (langCounts.get(r.language) ?? 0) + 1);
+    }
+    const topLanguages = [...langCounts.entries()]
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 6);
+
+    // Merge live metrics into the curated featured set.
+    const byName = new Map(repos.map((r) => [r.name.toLowerCase(), r]));
+    const featured: FeaturedProject[] = FEATURED.map((meta) => {
+      const repo = byName.get(meta.repo.toLowerCase());
+      if (!repo) return fallbackFeatured(meta);
+      return {
+        ...meta,
+        id: repo.node_id,
+        repoUrl: repo.html_url,
+        description: repo.description,
+        primaryLanguage: repo.language,
+        primaryLanguageColor: repo.language
+          ? LANGUAGE_COLORS[repo.language] ?? "#FD7024"
+          : null,
+        topics: repo.topics ?? [],
+        stars: repo.stargazers_count,
+        forks: repo.forks_count,
+        pushedAt: repo.pushed_at,
+      };
     });
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch GitHub projects");
-    }
-
-    const { data, errors } = await res.json();
-    if (errors) {
-      console.error("GraphQL errors:", errors);
-      return MOCK_PROJECTS;
-    }
-
-    const nodes = data.user.repositories.nodes as GithubRepository[];
-    const allMapped = nodes.map((repo) => mapRepositoryToProjectInfo(repo));
-
-    // Honour the admin-selected featured list (if any)
-    const featuredIds = await readFeatured();
-    if (featuredIds.length > 0) {
-      const ordered = featuredIds
-        .map((id) => allMapped.find((p) => p.id === id))
-        .filter(Boolean) as ProjectInfo[];
-      return ordered.length > 0 ? ordered : allMapped;
-    }
-
-    // Fallback: show all repos with at least 1 star or relevant topic
-    return allMapped.filter(
-      (p) => p.metrics.stars > 0 || p.topics.includes("ai") || p.topics.includes("saas")
-    );
-  } catch (err) {
-    console.error("Error fetching projects:", err);
-    return MOCK_PROJECTS;
+    return {
+      ok: true,
+      profile: {
+        name: user.name ?? user.login,
+        login: user.login,
+        htmlUrl: user.html_url,
+        followers: user.followers,
+        following: user.following,
+        publicRepos: user.public_repos,
+      },
+      totalStars,
+      topLanguages,
+      featured,
+    };
+  } catch {
+    // Network/parse error — degrade gracefully, never crash the page.
+    return emptyData();
   }
-}
-
-function generateAIFeatures(repoName: string, description: string | null): string[] {
-  // A mock AI layer to extract "Proof Blocks/Features" based on repo context.
-  // In a real scenario, you can call OpenAI here to summarize the README.
-  const lowerDesc = (description || "").toLowerCase();
-  
-  const baseFeatures = ["Full TypeScript Integration", "CI/CD Deployment Pipeline"];
-  
-  if (lowerDesc.includes("ai") || lowerDesc.includes("llm")) {
-    return [
-      "LLM Context Processing",
-      "Cost-optimized Token Routing",
-      ...baseFeatures,
-    ];
-  }
-  if (lowerDesc.includes("saas") || lowerDesc.includes("app")) {
-    return [
-      "Multi-tenant Architecture",
-      "Stripe Billing Ready",
-      ...baseFeatures,
-    ];
-  }
-  
-  return [
-    "High Performance Runtime",
-    "Optimized Bundle Size",
-    ...baseFeatures,
-  ];
-}
-
-function mapRepositoryToProjectInfo(repo: GithubRepository): ProjectInfo {
-  const commitCount = repo.defaultBranchRef?.target?.history?.totalCount || 0;
-  
-  // Synthesize metrics for a premium feel
-  const performanceScore = Math.floor(80 + Math.random() * 20); // 80 - 99
-  const fakeUserCount = Math.floor(Math.random() * 100) + "k+";
-  const contributorCount = Math.floor(Math.random() * 10) + 1;
-
-  const topics = repo.repositoryTopics?.nodes.map((n) => n.topic.name) || [];
-
-  return {
-    id: repo.id,
-    name: repo.name,
-    slug: repo.name.toLowerCase().replace(/\\s+/g, "-"),
-    tagline: repo.description?.split(".")[0] || "A cutting edge application.",
-    description: repo.description || "No description provided for this repository.",
-    url: repo.url,
-    demoUrl: repo.homepageUrl || null,
-    metrics: {
-      stars: repo.stargazerCount,
-      forks: repo.forkCount,
-      commits: commitCount,
-      contributors: contributorCount,
-      performanceScore,
-      users: fakeUserCount,
-    },
-    topics: topics,
-    primaryLanguage: repo.primaryLanguage?.name || null,
-    primaryLanguageColor: repo.primaryLanguage?.color || null,
-    updatedAt: repo.pushedAt,
-    features: generateAIFeatures(repo.name, repo.description),
-  };
 }
