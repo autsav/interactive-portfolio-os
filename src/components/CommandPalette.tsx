@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Github, Twitter, Mail, ArrowRight, CornerDownLeft } from "lucide-react";
-import { ProjectInfo } from "@/types/project";
+import { Search, Github, Twitter, Mail, CornerDownLeft } from "lucide-react";
+import { FeaturedProject } from "@/types/project";
 
 interface CommandPaletteProps {
-  projects: ProjectInfo[];
+  projects: FeaturedProject[];
 }
 
 export function CommandPalette({ projects }: CommandPaletteProps) {
@@ -26,18 +26,22 @@ export function CommandPalette({ projects }: CommandPaletteProps) {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const filteredProjects = projects.filter((p) =>
-    p.name.toLowerCase().includes(query.toLowerCase()) || 
-    p.description.toLowerCase().includes(query.toLowerCase())
-  ).slice(0, 3);
+  const filteredProjects = projects
+    .filter(
+      (p) =>
+        p.displayName.toLowerCase().includes(query.toLowerCase()) ||
+        p.problem.toLowerCase().includes(query.toLowerCase()) ||
+        p.stack.join(" ").toLowerCase().includes(query.toLowerCase())
+    )
+    .slice(0, 3);
 
   return (
     <>
-      <button 
+      <button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-6 left-6 z-40 bg-white/10 hover:bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-xs font-mono text-neutral-300 flex items-center gap-2 shadow-xl transition-all"
       >
-        <Search size={14} /> Search 
+        <Search size={14} /> Search
         <kbd className="bg-black/40 px-1.5 py-0.5 rounded border border-white/10 ml-1 font-sans font-medium text-[10px] uppercase text-neutral-400">Cmd K</kbd>
       </button>
 
@@ -62,7 +66,7 @@ export function CommandPalette({ projects }: CommandPaletteProps) {
                 <input
                   type="text"
                   autoFocus
-                  placeholder="Search projects, stack, commands..."
+                  placeholder="Search projects, stack, links..."
                   className="w-full bg-transparent border-none text-white focus:outline-none placeholder-neutral-500 text-lg font-light"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
@@ -73,19 +77,20 @@ export function CommandPalette({ projects }: CommandPaletteProps) {
               <div className="p-2 max-h-[60vh] overflow-y-auto">
                 {query.length > 0 && filteredProjects.length > 0 && (
                   <div className="mb-4">
-                    <p className="px-3 py-2 text-xs font-semibold text-neutral-500 uppercase tracking-widest">Apps</p>
+                    <p className="px-3 py-2 text-xs font-semibold text-neutral-500 uppercase tracking-widest">Projects</p>
                     {filteredProjects.map((p) => (
-                      <a 
+                      <a
                         key={p.id}
-                        href={p.url}
+                        href={p.liveUrl ?? p.repoUrl}
                         target="_blank"
+                        rel="noopener noreferrer"
                         className="flex items-center justify-between p-3 rounded-xl hover:bg-neutral-800 transition-colors group cursor-pointer"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center border border-neutral-800">
-                            {p.name.charAt(0)}
+                          <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center border border-neutral-800 text-white text-sm">
+                            {p.displayName.charAt(0)}
                           </div>
-                          <span className="text-sm font-medium text-white">{p.name}</span>
+                          <span className="text-sm font-medium text-white">{p.displayName}</span>
                         </div>
                         <CornerDownLeft size={16} className="text-neutral-600 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </a>
@@ -95,21 +100,21 @@ export function CommandPalette({ projects }: CommandPaletteProps) {
 
                 <div className="mb-2">
                   <p className="px-3 py-2 text-xs font-semibold text-neutral-500 uppercase tracking-widest">Connect</p>
-                  <a href="https://github.com/autsav" target="_blank" className="flex items-center px-3 py-3 rounded-xl hover:bg-neutral-800 transition-colors text-sm text-neutral-300">
+                  <a href="https://github.com/autsav" target="_blank" rel="noopener noreferrer" className="flex items-center px-3 py-3 rounded-xl hover:bg-neutral-800 transition-colors text-sm text-neutral-300">
                     <Github size={16} className="mr-3" /> GitHub Profile
                   </a>
-                  <a href="https://twitter.com/autsav" target="_blank" className="flex items-center px-3 py-3 rounded-xl hover:bg-neutral-800 transition-colors text-sm text-neutral-300">
+                  <a href="https://twitter.com/UtsabAdhikari5" target="_blank" rel="noopener noreferrer" className="flex items-center px-3 py-3 rounded-xl hover:bg-neutral-800 transition-colors text-sm text-neutral-300">
                     <Twitter size={16} className="mr-3" /> Twitter
                   </a>
                   <a href="mailto:autsav73@gmail.com" className="flex items-center px-3 py-3 rounded-xl hover:bg-neutral-800 transition-colors text-sm text-neutral-300">
-                    <Mail size={16} className="mr-3" /> Contact Engineering
+                    <Mail size={16} className="mr-3" /> Email
                   </a>
                 </div>
               </div>
 
               <div className="px-4 py-3 bg-neutral-950 border-t border-neutral-800 text-xs text-neutral-500 flex items-center justify-between">
-                <span>Interactive OS Spotlight</span>
-                <span>Use <kbd className="bg-neutral-800 px-1 py-0.5 rounded">↑</kbd> <kbd className="bg-neutral-800 px-1 py-0.5 rounded">↓</kbd> to navigate</span>
+                <span>Quick search</span>
+                <span>Press <kbd className="bg-neutral-800 px-1 py-0.5 rounded">Esc</kbd> to close</span>
               </div>
             </motion.div>
           </motion.div>

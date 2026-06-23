@@ -28,14 +28,17 @@ function applyTheme(t: Theme) {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  // Read the stored preference lazily (SSR-safe). The effect below only syncs
+  // the external DOM class, so there's no setState inside an effect.
+  const [theme, setThemeState] = useState<Theme>(() =>
+    typeof window === "undefined"
+      ? "dark"
+      : ((localStorage.getItem("portfolio-theme") as Theme | null) ?? "dark")
+  );
 
-  // Read stored preference on first mount
   useEffect(() => {
-    const stored = (localStorage.getItem("portfolio-theme") as Theme | null) ?? "dark";
-    setThemeState(stored);
-    applyTheme(stored);
-  }, []);
+    applyTheme(theme);
+  }, [theme]);
 
   const setTheme = useCallback((t: Theme) => {
     setThemeState(t);

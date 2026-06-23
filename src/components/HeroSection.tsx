@@ -1,15 +1,40 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
+import { ArrowDown, Github, MapPin } from "lucide-react";
 import { UniverseCanvas } from "./UniverseCanvas";
 
-const ROLES = ["AI Systems Architect", "Creative Developer", "ML Engineer", "Full-Stack Builder"];
+// Real, defensible facets of the same person — not invented seniority.
+const ROLES = ["Full-stack engineer", "Backend developer", "AI & automation builder"];
+
+// Subscribe to the OS reduced-motion preference via an external store — no
+// setState-in-effect, and SSR-safe (server snapshot is false).
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false
+  );
+}
 
 export function HeroSection() {
   const roleRef = useRef<HTMLSpanElement>(null);
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
+    if (!roleRef.current) return;
+
+    // With reduced motion, skip the typewriter and show a static label.
+    if (reducedMotion) {
+      roleRef.current.textContent = ROLES[0];
+      return;
+    }
+
     let roleIdx = 0;
     let charIdx = 0;
     let deleting = false;
@@ -38,95 +63,117 @@ export function HeroSection() {
       timeout = setTimeout(type, deleting ? 40 : 80);
     }
 
-    timeout = setTimeout(type, 800);
+    timeout = setTimeout(type, 700);
     return () => clearTimeout(timeout);
-  }, []);
+  }, [reducedMotion]);
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* Three.js Universe */}
-      <div className="absolute inset-0">
+      {/* Three.js backdrop. It fails silently (no WebGL) and is decorative only,
+          so the hero is fully readable without it. */}
+      <div className="absolute inset-0" aria-hidden="true">
         <UniverseCanvas />
       </div>
 
-      {/* Caustic light blobs */}
-      <div className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full bg-orange-600/5 blur-3xl caustic-light pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/3 w-80 h-80 rounded-full bg-blue-600/5 blur-3xl caustic-light pointer-events-none" style={{ animationDelay: "3s" }} />
+      {/* Bottom gradient fade */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
+        style={{ background: "linear-gradient(to top, var(--bg), transparent)" }}
+        aria-hidden="true"
+      />
 
-      {/* Scan line effect */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-        <div className="scan-line absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/30 to-transparent" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+      <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-6"
+          className="mb-6 flex flex-wrap items-center justify-center gap-3"
         >
-          <span className="mono text-xs tracking-[0.4em] uppercase border px-4 py-2 rounded-full inline-block"
-          style={{ color: "var(--orange)", borderColor: "var(--border-hover)", backgroundColor: "var(--orange-dim)" }}
-        >
-            ◈ Interactive Project OS &nbsp;·&nbsp; Initializing
+          <span
+            className="mono text-[11px] tracking-[0.25em] uppercase border px-4 py-2 rounded-full inline-flex items-center gap-2"
+            style={{ color: "var(--green)", borderColor: "var(--border-hover)", backgroundColor: "var(--orange-dim)" }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--green)" }} />
+            Open to visa-sponsored UK roles
+          </span>
+          <span
+            className="mono text-[11px] tracking-[0.15em] uppercase inline-flex items-center gap-1.5"
+            style={{ color: "var(--fg-muted)" }}
+          >
+            <MapPin size={12} style={{ color: "var(--orange)" }} /> London, UK
           </span>
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-6xl md:text-8xl font-bold tracking-tighter mb-4 leading-[0.95]"
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="text-4xl md:text-6xl font-bold tracking-tighter mb-5 leading-[1.05]"
+          style={{ color: "var(--fg)" }}
         >
-          <span className="text-gradient-orange">Engineering</span>
+          Utsab Adhikari
           <br />
-          <span style={{ color: "var(--fg)" }}>the Future</span>
+          <span className="text-gradient-orange">builds AI agents, APIs &amp; web apps.</span>
         </motion.h1>
 
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-xl md:text-2xl text-[#5a5a6e] mb-12 mono h-8"
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="text-lg md:text-xl mb-4 mono h-7"
+          style={{ color: "var(--fg-subtle)" }}
         >
-          &gt; <span ref={roleRef} style={{ color: "var(--blue-soft)" }} />
+          &gt; <span ref={roleRef} style={{ color: "var(--blue)" }} />
           <span className="animate-pulse" style={{ color: "var(--orange)" }}>_</span>
         </motion.div>
 
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+          className="text-base md:text-lg mb-10 max-w-xl mx-auto leading-relaxed"
+          style={{ color: "var(--fg-muted)" }}
+        >
+          Full-stack &amp; backend engineer — TypeScript/Node and Python/AI. Three
+          years building APIs, automation tools and AI products from prototype to deployed.
+        </motion.p>
+
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.7 }}
           className="flex flex-wrap gap-4 justify-center items-center"
         >
           <a
             href="#projects"
-            className="px-8 py-4 bg-orange-500 hover:bg-orange-400 text-white font-semibold rounded-full transition-all hover:scale-105 glow-orange"
+            className="px-7 py-3.5 text-white font-semibold rounded-full transition-transform hover:scale-105 glow-orange"
+            style={{ backgroundColor: "var(--orange)" }}
           >
-            Explore Projects
+            See the work
           </a>
           <a
-            href="#bento"
-            className="px-8 py-4 border border-[#F5ECD7]/20 hover:border-orange-400/50 text-[#F5ECD7] font-semibold rounded-full transition-all hover:text-orange-400"
+            href="https://github.com/autsav"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-7 py-3.5 border font-semibold rounded-full transition-colors hover:border-orange-400/50 inline-flex items-center gap-2"
+            style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
           >
-            View Capabilities
+            <Github size={16} /> GitHub
           </a>
         </motion.div>
       </div>
 
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none" style={{ background: "linear-gradient(to top, var(--bg), transparent)" }} />
-
-      {/* Scroll hint */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: 1.3 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        aria-hidden="true"
       >
-        <span className="mono text-[10px] tracking-[0.3em] uppercase" style={{ color: "var(--fg-muted)" }}>Scroll to navigate</span>
-        <div className="w-px h-12 bg-gradient-to-b from-orange-400/50 to-transparent" />
+        <span className="mono text-[10px] tracking-[0.3em] uppercase" style={{ color: "var(--fg-muted)" }}>
+          Scroll
+        </span>
+        <ArrowDown size={14} style={{ color: "var(--orange)" }} />
       </motion.div>
     </section>
   );

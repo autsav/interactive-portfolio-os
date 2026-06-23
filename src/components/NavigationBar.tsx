@@ -1,18 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import { LayoutGrid, Github, Twitter, MapPin, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 
+// false during SSR, true after hydration — used to defer client-only UI (the
+// theme toggle) without a setState-in-effect.
+function useMounted() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+}
+
 export function NavigationBar() {
   const [time, setTime] = useState("");
   const [scrolled, setScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
-    setMounted(true);
     const interval = setInterval(() => {
       setTime(
         new Date().toLocaleTimeString("en-US", {
@@ -73,9 +82,9 @@ export function NavigationBar() {
 
         {/* Center: Nav Links */}
         <div className="hidden md:flex items-center gap-8 text-sm font-semibold">
-          <a href="#bento" className="transition-colors hover:opacity-70" style={{ color: "var(--fg-muted)" }}>Capabilities</a>
           <a href="#projects" className="transition-colors hover:opacity-70" style={{ color: "var(--fg-muted)" }}>Projects</a>
-          <a href="#mlops" className="transition-colors hover:opacity-70" style={{ color: "var(--fg-muted)" }}>MLOps</a>
+          <a href="#github" className="transition-colors hover:opacity-70" style={{ color: "var(--fg-muted)" }}>GitHub</a>
+          <a href="#skills" className="transition-colors hover:opacity-70" style={{ color: "var(--fg-muted)" }}>Skills</a>
         </div>
 
         {/* Right: Time + Theme Toggle + Socials */}
@@ -117,7 +126,7 @@ export function NavigationBar() {
             <Github size={16} />
           </a>
           <a
-            href="https://twitter.com/autsav"
+            href="https://twitter.com/UtsabAdhikari5"
             target="_blank"
             rel="noopener noreferrer"
             className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-60"

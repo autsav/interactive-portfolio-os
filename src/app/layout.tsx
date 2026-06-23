@@ -9,13 +9,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Utsab Adhikari | AI Systems Architect",
+  title: "Utsab Adhikari | Full-stack & AI Engineer",
   description:
-    "Senior AI Systems Architect and creative developer. Explore production-grade AI orchestration and spatial computing through an interactive project operating system.",
-  keywords: ["Utsab Adhikari", "AI Engineer", "ML Systems", "Next.js", "Portfolio", "LLMs", "RAG", "MLOps"],
+    "Full-stack and backend engineer in London building AI agents, APIs and web apps with TypeScript/Node and Python. Open to visa-sponsored UK roles.",
+  keywords: ["Utsab Adhikari", "Full-stack Developer", "Backend Developer", "AI Engineer", "Next.js", "Python", "TypeScript", "London"],
   openGraph: {
-    title: "Utsab Adhikari // AI Portfolio",
-    description: "A live demonstration of production-grade AI orchestration — not a static resume.",
+    title: "Utsab Adhikari — Full-stack & AI Engineer",
+    description:
+      "Real projects with live demos, and live GitHub stats. Full-stack & backend engineer in London.",
     type: "website",
   },
 };
@@ -24,17 +25,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${geistMono.variable} dark`} suppressHydrationWarning>
       <head>
-        <link rel="mx-manifest" href="/mx.json" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Person",
-              "name": "Utsab Adhikari",
-              "jobTitle": "Senior AI Systems Architect",
-              "knowsAbout": ["AI Orchestration", "MLOps", "Full-Stack Development"],
-              "description": "Interactive Portfolio OS of Utsab Adhikari, Senior AI Systems Architect.",
+              name: "Utsab Adhikari",
+              jobTitle: "Full-stack & Backend Engineer",
+              knowsAbout: ["Full-Stack Development", "Backend Development", "AI Agents", "APIs", "Automation"],
+              address: { "@type": "PostalAddress", addressLocality: "London", addressCountry: "UK" },
+              url: "https://utsabadhikari.com",
+              sameAs: ["https://github.com/autsav", "https://twitter.com/UtsabAdhikari5"],
             }),
           }}
         />
@@ -45,4 +47,3 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     </html>
   );
 }
-

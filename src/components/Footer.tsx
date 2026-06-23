@@ -28,14 +28,27 @@ export function Footer() {
         <h3 className="text-xl font-bold tracking-tight mb-2" style={{ color: "var(--fg)" }}>
           Utsab Adhikari
         </h3>
-        <p className="text-sm max-w-sm mb-10 font-light leading-relaxed" style={{ color: "var(--fg-muted)" }}>
-          Engineering for impact. Proof that great systems and beautiful design are the same problem.
+        <p className="text-sm max-w-sm mb-8 font-light leading-relaxed" style={{ color: "var(--fg-muted)" }}>
+          Open to visa-sponsored software roles in the UK. The fastest way to see
+          what I do is the code itself — start there.
         </p>
 
-        <div className="flex gap-8 mono text-xs tracking-[0.2em] uppercase mb-10" style={{ color: "var(--fg-muted)" }}>
+        {/* Primary CTA: GitHub stands in for a CV until a PDF is added. */}
+        <a
+          href="https://github.com/autsav"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-white mb-10 transition-transform hover:scale-105 glow-orange"
+          style={{ backgroundColor: "var(--orange)" }}
+        >
+          <Github size={16} /> View GitHub profile
+        </a>
+
+        <div className="flex flex-wrap justify-center gap-8 mono text-xs tracking-[0.2em] uppercase mb-10" style={{ color: "var(--fg-muted)" }}>
           <a
             href="https://github.com/autsav"
             target="_blank"
+            rel="noopener noreferrer"
             className="transition-colors flex items-center gap-2 hover:opacity-60"
           >
             <Github size={14} /> GitHub
@@ -48,8 +61,9 @@ export function Footer() {
             <MessageSquare size={14} /> WhatsApp
           </a>
           <a
-            href="https://twitter.com/autsav"
+            href="https://twitter.com/UtsabAdhikari5"
             target="_blank"
+            rel="noopener noreferrer"
             className="transition-colors flex items-center gap-2 hover:opacity-60"
           >
             <Twitter size={14} /> Twitter
@@ -71,8 +85,7 @@ export function Footer() {
             backgroundColor: "var(--orange-dim)",
           }}
         >
-          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: "var(--green)" }} />
-          All systems operational · Built with Next.js 16, Three.js, Framer Motion
+          Built with Next.js, Three.js &amp; Framer Motion · London, UK
         </div>
       </div>
     </footer>

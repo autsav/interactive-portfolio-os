@@ -10,12 +10,24 @@ export function UniverseCanvas() {
     if (!mountRef.current) return;
     const mount = mountRef.current;
 
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
     // ── Scene Setup ────────────────────────────────────────────────
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(60, mount.clientWidth / mount.clientHeight, 0.1, 1000);
     camera.position.set(0, 0, 30);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    // WebGL may be unavailable (blocked, old GPU, headless). The canvas is
+    // purely decorative, so on failure we bail out and let the page render
+    // without it rather than crashing.
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch {
+      return;
+    }
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
@@ -96,7 +108,7 @@ export function UniverseCanvas() {
       mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
       mouseY = -(e.clientY / window.innerHeight - 0.5) * 2;
     };
-    window.addEventListener("mousemove", onMouseMove);
+    if (!prefersReducedMotion) window.addEventListener("mousemove", onMouseMove);
 
     // ── Animation Loop ─────────────────────────────────────────────
     let animId: number;
@@ -114,7 +126,7 @@ export function UniverseCanvas() {
       const t = performance.now() * 0.001;
 
       // Orbit planets
-      planets.forEach(({ mesh, cfg, angle }, i) => {
+      planets.forEach(({ mesh, cfg }, i) => {
         if (cfg.orbitRadius === 0) {
           mesh.rotation.y += 0.002;
           return;
@@ -135,7 +147,14 @@ export function UniverseCanvas() {
 
       renderer.render(scene, camera);
     };
-    animate();
+
+    if (prefersReducedMotion) {
+      // Honour reduced-motion: paint one static frame, no animation loop.
+      camera.lookAt(0, 0, 0);
+      renderer.render(scene, camera);
+    } else {
+      animate();
+    }
 
     // ── Resize ─────────────────────────────────────────────────────
     const onResize = () => {
