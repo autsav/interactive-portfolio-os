@@ -15,6 +15,7 @@ export default async function Home() {
 
   return (
     <main
+      id="main"
       className="min-h-screen relative overflow-x-hidden"
       style={{ backgroundColor: "var(--bg)", color: "var(--fg)" }}
     >

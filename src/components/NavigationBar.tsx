@@ -18,6 +18,7 @@ function useMounted() {
 export function NavigationBar() {
   const [time, setTime] = useState("");
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
   const mounted = useMounted();
   const { theme, setTheme } = useTheme();
 
@@ -40,6 +41,27 @@ export function NavigationBar() {
       clearInterval(interval);
       window.removeEventListener("scroll", handleScroll);
     };
+  }, []);
+
+  // Scroll-spy: highlight the nav link for the section currently in view.
+  useEffect(() => {
+    const ids = ["projects", "github", "skills"];
+    const sections = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) setActiveSection(e.target.id);
+        }
+      },
+      // Trigger when a section's band crosses the vertical middle of the viewport.
+      { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
   }, []);
 
   function toggleTheme() {
@@ -82,9 +104,31 @@ export function NavigationBar() {
 
         {/* Center: Nav Links */}
         <div className="hidden md:flex items-center gap-8 text-sm font-semibold">
-          <a href="#projects" className="transition-colors hover:opacity-70" style={{ color: "var(--fg-muted)" }}>Projects</a>
-          <a href="#github" className="transition-colors hover:opacity-70" style={{ color: "var(--fg-muted)" }}>GitHub</a>
-          <a href="#skills" className="transition-colors hover:opacity-70" style={{ color: "var(--fg-muted)" }}>Skills</a>
+          {([
+            ["projects", "Projects"],
+            ["github", "GitHub"],
+            ["skills", "Skills"],
+          ] as const).map(([id, label]) => {
+            const active = activeSection === id;
+            return (
+              <a
+                key={id}
+                href={`#${id}`}
+                aria-current={active ? "true" : undefined}
+                className="transition-colors hover:opacity-70 inline-flex items-center gap-1.5"
+                style={{ color: active ? "var(--fg)" : "var(--fg-muted)" }}
+              >
+                {active && (
+                  <span
+                    className="w-1.5 h-1.5 rounded-full"
+                    style={{ backgroundColor: "var(--orange)" }}
+                    aria-hidden="true"
+                  />
+                )}
+                {label}
+              </a>
+            );
+          })}
         </div>
 
         {/* Right: Time + Theme Toggle + Socials */}

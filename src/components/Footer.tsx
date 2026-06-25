@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Twitter, Mail, Terminal, MessageSquare } from "lucide-react";
+import { Github, Twitter, Mail, Terminal, MessageSquare, FileText } from "lucide-react";
 
 export function Footer() {
   return (
@@ -29,20 +29,32 @@ export function Footer() {
           Utsab Adhikari
         </h3>
         <p className="text-sm max-w-sm mb-8 font-light leading-relaxed" style={{ color: "var(--fg-muted)" }}>
-          Open to visa-sponsored software roles in the UK. The fastest way to see
-          what I do is the code itself — start there.
+          Available for hire — London / remote. The fastest way to see what I do
+          is the code itself — start there.
         </p>
 
-        {/* Primary CTA: GitHub stands in for a CV until a PDF is added. */}
-        <a
-          href="https://github.com/autsav"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-white mb-10 transition-transform hover:scale-105 glow-orange"
-          style={{ backgroundColor: "var(--orange)" }}
-        >
-          <Github size={16} /> View GitHub profile
-        </a>
+        {/* Primary CTAs: résumé leads for recruiters; GitHub stands in for a CV
+            until a PDF is dropped into /public. */}
+        <div className="flex flex-wrap justify-center gap-3 mb-10">
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-white transition-transform hover:scale-105 glow-orange"
+            style={{ backgroundColor: "var(--orange)" }}
+          >
+            <FileText size={16} /> Résumé
+          </a>
+          <a
+            href="https://github.com/autsav"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold border transition-colors hover:border-orange-400/50"
+            style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
+          >
+            <Github size={16} /> View GitHub profile
+          </a>
+        </div>
 
         <div className="flex flex-wrap justify-center gap-8 mono text-xs tracking-[0.2em] uppercase mb-10" style={{ color: "var(--fg-muted)" }}>
           <a

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown, Github, MapPin } from "lucide-react";
+import { ArrowDown, Github, MapPin, FileText, Mail } from "lucide-react";
 import { UniverseCanvas } from "./UniverseCanvas";
 
 // Real, defensible facets of the same person — not invented seniority.
@@ -94,13 +94,13 @@ export function HeroSection() {
             style={{ color: "var(--green)", borderColor: "var(--border-hover)", backgroundColor: "var(--orange-dim)" }}
           >
             <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--green)" }} />
-            Open to visa-sponsored UK roles
+            Available for hire
           </span>
           <span
             className="mono text-[11px] tracking-[0.15em] uppercase inline-flex items-center gap-1.5"
             style={{ color: "var(--fg-muted)" }}
           >
-            <MapPin size={12} style={{ color: "var(--orange)" }} /> London, UK
+            <MapPin size={12} style={{ color: "var(--orange)" }} /> London · remote
           </span>
         </motion.div>
 
@@ -150,6 +150,22 @@ export function HeroSection() {
             style={{ backgroundColor: "var(--orange)" }}
           >
             See the work
+          </a>
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-7 py-3.5 border font-semibold rounded-full transition-colors hover:border-orange-400/50 inline-flex items-center gap-2"
+            style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
+          >
+            <FileText size={16} /> Résumé
+          </a>
+          <a
+            href="mailto:autsav73@gmail.com?subject=Work%20opportunity"
+            className="px-7 py-3.5 border font-semibold rounded-full transition-colors hover:border-orange-400/50 inline-flex items-center gap-2"
+            style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
+          >
+            <Mail size={16} /> Get in touch
           </a>
           <a
             href="https://github.com/autsav"

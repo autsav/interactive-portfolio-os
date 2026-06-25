@@ -91,6 +91,37 @@ html.light {
     color: var(--fg);
   }
 
+  /* Keyboard focus ring — visible only for keyboard users (focus-visible),
+     never for mouse clicks. */
+  :focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Skip-to-content link — off-screen until keyboard-focused. */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 200;
+    transform: translateY(-150%);
+    padding: 0.6rem 1.1rem;
+    border-radius: 0.6rem;
+    background: var(--orange);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    font-family: "IBM Plex Mono", monospace;
+    letter-spacing: 0.02em;
+    transition: transform 0.18s ease;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
