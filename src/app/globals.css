@@ -203,45 +203,6 @@ html.light {
 }
 
 /* ─────────────────────────────────────────────────────────
-   LIGHT MODE — override hardcoded dark Tailwind classes
-   so theme switch is visible even in unmigrated components
-   ───────────────────────────────────────────────────────── */
-html.light {
-  /* Page & section backgrounds */
-  background-color: var(--bg);
-
-  /* Catch hardcoded dark text Tailwind classes */
-  .text-\[\#F5ECD7\]  { color: var(--fg) !important; }
-  .text-\[\#5a5a6e\]  { color: var(--fg-muted) !important; }
-  .text-\[\#c8bfaf\]  { color: var(--fg-muted) !important; }
-
-  /* Catch hardcoded dark backgrounds */
-  .bg-\[\#070709\]    { background-color: var(--bg) !important; }
-  .bg-black           { background-color: var(--bg) !important; }
-  .bg-black\/80       { background-color: var(--bg-surface) !important; }
-
-  /* White/border utilities that assume dark bg */
-  .border-white\/5    { border-color: var(--border) !important; }
-  .border-white\/6    { border-color: var(--border) !important; }
-  .border-white\/8    { border-color: var(--border) !important; }
-  .bg-white\/4        { background-color: rgba(0,0,0,0.04) !important; }
-  .bg-white\/3        { background-color: rgba(0,0,0,0.03) !important; }
-  .bg-white\/2        { background-color: rgba(0,0,0,0.02) !important; }
-  .bg-white\/5        { background-color: rgba(0,0,0,0.05) !important; }
-
-  /* Neutral / zinc shades on dark components */
-  .text-neutral-400   { color: var(--fg-muted) !important; }
-  .text-neutral-500   { color: var(--fg-muted) !important; }
-  .text-neutral-600   { color: var(--fg-subtle) !important; }
-  .text-neutral-700   { color: var(--fg-subtle) !important; }
-  .bg-neutral-900     { background-color: rgba(0,0,0,0.05) !important; }
-  .border-neutral-800 { border-color: var(--border) !important; }
-
-  /* MLOps / bento hardcoded dark text */
-  .text-\[\#F5ECD7\], .text-white { color: var(--fg) !important; }
-}
-
-/* ─────────────────────────────────────────────────────────
    REDUCED MOTION — disable all CSS animations + transitions.
    Framer Motion is gated separately via <MotionConfig reducedMotion="user">
    in ThemeProvider. The typewriter in HeroSection also checks this preference.

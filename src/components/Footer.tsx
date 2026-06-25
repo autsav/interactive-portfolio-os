@@ -9,13 +9,14 @@ export function Footer() {
       className="w-full border-t pt-20 pb-10 relative overflow-hidden"
       style={{ borderColor: "var(--border)", backgroundColor: "var(--bg)" }}
     >
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-400/20 to-transparent" />
+      <div className="absolute top-0 left-0 w-full h-px" style={{ background: "linear-gradient(to right, transparent, var(--orange-dim), transparent)" }} />
 
       <div className="max-w-6xl mx-auto px-6 flex flex-col items-center text-center relative z-10">
         <motion.div
           whileHover={{ rotate: 360 }}
           transition={{ duration: 0.6 }}
-          className="w-12 h-12 rounded-xl flex items-center justify-center mb-8 cursor-pointer"
+          className="w-12 h-12 rounded-xl flex items-center justify-center mb-8"
+          aria-hidden="true"
           style={{
             border: "1px solid var(--border-hover)",
             backgroundColor: "var(--orange-dim)",
@@ -40,7 +41,7 @@ export function Footer() {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-white transition-transform hover:scale-105 glow-orange"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-white transition-transform hover:scale-105 active:scale-95 glow-orange"
             style={{ backgroundColor: "var(--orange)" }}
           >
             <FileText size={16} /> Résumé
@@ -49,7 +50,7 @@ export function Footer() {
             href="https://github.com/autsav"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold border transition-colors hover:border-orange-400/50"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold border transition-colors hover:opacity-80 active:scale-95"
             style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
           >
             <Github size={16} /> View GitHub profile

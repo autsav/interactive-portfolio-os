@@ -61,7 +61,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                   style={{ color: "var(--fg-muted)", backgroundColor: "var(--bg-card)", borderColor: "var(--border)" }}
                   title="Stars (live from GitHub)"
                 >
-                  <Star size={12} className="text-orange-400" fill="currentColor" /> {metric(p.stars)}
+                  <Star size={12} style={{ color: "var(--orange)" }} fill="currentColor" /> {metric(p.stars)}
                 </span>
                 <span
                   className="flex items-center gap-1.5 mono text-xs px-3 py-1.5 rounded-full border"
@@ -108,7 +108,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                   href={p.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-white transition-transform hover:scale-[1.03]"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-white transition-transform hover:scale-[1.03] active:scale-95"
                   style={{ backgroundColor: "var(--orange)" }}
                 >
                   Live demo <ArrowUpRight size={16} />
@@ -118,7 +118,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                 href={p.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold border transition-colors hover:border-orange-400/50"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold border transition-colors hover:opacity-80 active:scale-95"
                 style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
               >
                 <Github size={16} /> Source

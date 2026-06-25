@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown, Github, MapPin, FileText, Mail } from "lucide-react";
+import { ArrowDown, MapPin, FileText } from "lucide-react";
 import { UniverseCanvas } from "./UniverseCanvas";
 
 // Real, defensible facets of the same person — not invented seniority.
@@ -144,9 +144,10 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.7 }}
           className="flex flex-wrap gap-4 justify-center items-center"
         >
+          {/* Single primary CTA — the rest live in the nav + footer. */}
           <a
             href="#projects"
-            className="px-7 py-3.5 text-white font-semibold rounded-full transition-transform hover:scale-105 glow-orange"
+            className="px-7 py-3.5 text-white font-semibold rounded-full transition-transform hover:scale-105 active:scale-95 glow-orange"
             style={{ backgroundColor: "var(--orange)" }}
           >
             See the work
@@ -155,26 +156,10 @@ export function HeroSection() {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-7 py-3.5 border font-semibold rounded-full transition-colors hover:border-orange-400/50 inline-flex items-center gap-2"
+            className="px-7 py-3.5 border font-semibold rounded-full transition-colors hover:opacity-80 active:scale-95 inline-flex items-center gap-2"
             style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
           >
             <FileText size={16} /> Résumé
-          </a>
-          <a
-            href="mailto:autsav73@gmail.com?subject=Work%20opportunity"
-            className="px-7 py-3.5 border font-semibold rounded-full transition-colors hover:border-orange-400/50 inline-flex items-center gap-2"
-            style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
-          >
-            <Mail size={16} /> Get in touch
-          </a>
-          <a
-            href="https://github.com/autsav"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-7 py-3.5 border font-semibold rounded-full transition-colors hover:border-orange-400/50 inline-flex items-center gap-2"
-            style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
-          >
-            <Github size={16} /> GitHub
           </a>
         </motion.div>
       </div>
