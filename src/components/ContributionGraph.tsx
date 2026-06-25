@@ -10,41 +10,10 @@ import { ContributionData } from "@/types/project";
  * Static data viz (no motion), so it renders on touch and under reduced-motion.
  */
 export function ContributionGraph({ data }: { data: ContributionData | null }) {
-  if (!data) {
-    // Honest empty-state: explain why + show faint placeholder cells.
-    return (
-      <div className="bento-card p-5 md:p-6 mb-6">
-        <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <p className="mono text-[10px] uppercase tracking-widest" style={{ color: "var(--fg-muted)" }}>
-            Contributions — last year
-          </p>
-          <span className="mono text-[10px]" style={{ color: "var(--fg-subtle)" }}>
-            needs GITHUB_TOKEN
-          </span>
-        </div>
-        <div
-          className="flex gap-[3px] overflow-hidden opacity-40 select-none"
-          aria-label="Contribution graph unavailable: a GitHub token is required to render the last year of activity."
-        >
-          {Array.from({ length: 52 }).map((_, w) => (
-            <div key={w} className="flex flex-col gap-[3px]">
-              {Array.from({ length: 7 }).map((__, d) => (
-                <span
-                  key={d}
-                  className="rounded-[2px]"
-                  style={{ width: 11, height: 11, backgroundColor: "var(--bg-card)" }}
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-        <p className="text-xs mt-3" style={{ color: "var(--fg-muted)" }}>
-          Set a <span className="mono">GITHUB_TOKEN</span> env var to surface the live
-          contribution calendar. No activity is invented in the meantime.
-        </p>
-      </div>
-    );
-  }
+  // No token / fetch failed → render nothing. Exposing env-var config
+  // ("needs GITHUB_TOKEN") to visitors was a leak; never fabricated a grid.
+  // The graph appears on its own once GITHUB_TOKEN is set server-side.
+  if (!data) return null;
 
   // 5-level orange scale; 0 contributions renders a faint empty cell.
   const cellColor = (count: number): string => {

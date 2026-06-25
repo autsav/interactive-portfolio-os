@@ -30,8 +30,23 @@ BASE = 7898305 (design-fixes merged; live-feel branch HEAD before B1-2 onward)
 - #19 tech marquee: complete (TechMarquee.tsx, mounted in SkillsSection)
 - #20 dynamic OG + favicon + 404: complete (opengraph-image.tsx, icon.tsx,
   not-found.tsx)
-- #3 contribution heatmap: SKIPPED (needs GITHUB_TOKEN; degrades to empty
-  without it — revisit when a token is set)
+- #3 contribution heatmap: complete (Batch 3) — fetchContributions() GraphQL
+  (auth-gated); honest empty-state when no GITHUB_TOKEN (faint placeholder grid,
+  no fabricated data). Completes all 20 upgrades.
+
+## Batch 3 — finish the last of 20 (#3)
+
+- Commit: ea686d6 (branch live-feel)
+- Files: src/lib/github.ts (fetchContributions), src/types/project.ts
+  (ContributionData), src/components/ContributionGraph.tsx (new),
+  src/components/GithubStrip.tsx (mount)
+- lint green, build green
+- Deploy: dpl_CuY7MSkd3D48S3TbDC3VZKjajR57 → READY → www.utsabadhikari.com
+- Verified live SSR: 'Contributions — last year' / 'needs GITHUB_TOKEN' /
+  'No activity is invented' present (empty-state, no token locally). Set
+  GITHUB_TOKEN in Vercel env → real grid on next revalidate.
+
+## ALL 20 UPGRADES COMPLETE (Batch 1 + 2 + 3)
 
 Batch 2 commit: 9bfdb20 (branch live-feel)
 Deploy: dpl_B3MCyJXDjMDCMajDmf6PeMxNo5L5 → READY → www.utsabadhikari.com
