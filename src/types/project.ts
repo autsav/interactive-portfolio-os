@@ -15,6 +15,13 @@ export interface FeaturedMeta {
   stack: string[];
   /** Live demo URL, or null when there is no live deployment. */
   liveUrl: string | null;
+  /** Optional deeper narrative (owner-authored prose only — no fabricated numbers). */
+  caseStudy?: {
+    challenge: string;
+    approach: string;
+    architecture: string;
+    outcome: string;
+  };
 }
 
 /** A featured project = editorial meta + live numbers from the API. */

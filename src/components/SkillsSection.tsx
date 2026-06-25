@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { FeaturedProject } from "@/types/project";
+import { TechMarquee } from "./TechMarquee";
 
 interface SkillsSectionProps {
   projects: FeaturedProject[];
@@ -64,6 +65,9 @@ export function SkillsSection({ projects }: SkillsSectionProps) {
           </div>
         ))}
       </div>
+
+      {/* Slow auto-scrolling marquee of the real stack chips. */}
+      <TechMarquee projects={projects} />
     </section>
   );
 }

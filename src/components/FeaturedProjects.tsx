@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
-import { Star, GitFork, ArrowUpRight, Github } from "lucide-react";
+import { Star, GitFork, ArrowUpRight, Github, BookOpen } from "lucide-react";
 import { FeaturedProject } from "@/types/project";
 import { usePrefersReducedMotion, usePointerFine, useRelativeTime } from "@/lib/hooks";
+import { ProjectModal } from "./ProjectModal";
 
 interface FeaturedProjectsProps {
   projects: FeaturedProject[];
@@ -15,7 +16,7 @@ function metric(value: number | null): string {
   return value === null ? "—" : String(value);
 }
 
-function ProjectCard({ p, index }: { p: FeaturedProject; index: number }) {
+function ProjectCard({ p, index, onSelect }: { p: FeaturedProject; index: number; onSelect: (p: FeaturedProject) => void }) {
   const reducedMotion = usePrefersReducedMotion();
   const pointerFine = usePointerFine();
   const tilt = pointerFine && !reducedMotion;
@@ -156,6 +157,15 @@ function ProjectCard({ p, index }: { p: FeaturedProject; index: number }) {
           >
             <Github size={16} /> Source
           </a>
+          <button
+            type="button"
+            onClick={() => onSelect(p)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold border transition-colors hover:opacity-80 active:scale-95"
+            style={{ color: "var(--fg-muted)", borderColor: "var(--border)" }}
+            aria-label={`Read ${p.displayName} case study`}
+          >
+            <BookOpen size={16} /> Case study
+          </button>
         </div>
       </motion.article>
     </motion.div>
@@ -163,6 +173,8 @@ function ProjectCard({ p, index }: { p: FeaturedProject; index: number }) {
 }
 
 export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
+  const [selected, setSelected] = useState<FeaturedProject | null>(null);
+
   return (
     <section id="projects" className="py-24 px-4 max-w-6xl mx-auto">
       <motion.div
@@ -185,9 +197,11 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
 
       <div className="flex flex-col gap-6">
         {projects.map((p, i) => (
-          <ProjectCard key={p.id} p={p} index={i} />
+          <ProjectCard key={p.id} p={p} index={i} onSelect={setSelected} />
         ))}
       </div>
+
+      <ProjectModal project={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }

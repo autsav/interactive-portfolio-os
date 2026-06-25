@@ -100,6 +100,27 @@ export function Footer() {
         >
           Built with Next.js, Three.js &amp; Framer Motion · London, UK
         </div>
+
+        {/* Deployment/status pill — static-credible (the site is up). Links to
+            the Vercel project so a visitor can confirm it's really deployed. */}
+        <a
+          href="https://vercel.com/autsavs-projects/interactive-portfolio"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mono text-[10px] flex items-center gap-2 px-4 py-2 rounded-full mt-4 transition-colors hover:opacity-80"
+          style={{
+            color: "var(--fg-muted)",
+            border: "1px solid var(--border)",
+            backgroundColor: "var(--bg-card)",
+          }}
+          title="This site is deployed via Vercel"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping" style={{ backgroundColor: "var(--green)" }} aria-hidden="true" />
+            <span className="relative inline-flex h-2 w-2 rounded-full" style={{ backgroundColor: "var(--green)" }} />
+          </span>
+          Deployed via Vercel · build green
+        </a>
       </div>
     </footer>
   );

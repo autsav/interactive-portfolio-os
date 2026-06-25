@@ -22,6 +22,16 @@ const FEATURED: FeaturedMeta[] = [
       "Claude generates curriculum modules and quizzes; quiz scores update a running mastery signal, with a realtime WebSocket AI tutor.",
     stack: ["React", "TypeScript", "Vite", "FastAPI", "Anthropic Claude", "Supabase"],
     liveUrl: "https://ai-lms-olive.vercel.app",
+    caseStudy: {
+      challenge:
+        "Static curricula ignore a learner's actual mastery, so everyone gets the same path regardless of gaps.",
+      approach:
+        "Let Claude generate the curriculum and quizzes per learner, and feed quiz results back into a running mastery signal that picks the next module.",
+      architecture:
+        "React/Vite front end, FastAPI service calling Anthropic Claude, Supabase for auth + persistence, and a realtime WebSocket channel for the AI tutor.",
+      outcome:
+        "A working adaptive loop where quiz scores visibly steer the next module, and a live AI tutor answers in session.",
+    },
   },
   {
     repo: "Citation-generator",
@@ -31,6 +41,16 @@ const FEATURED: FeaturedMeta[] = [
       "Generates APA, MLA and Harvard citations for books, journals, websites and newspapers — multi-author, one-click copy, auto-saved history, no signup.",
     stack: ["JavaScript", "HTML", "CSS"],
     liveUrl: "https://citation-generator-one.vercel.app",
+    caseStudy: {
+      challenge:
+        "Citing sources in APA/MLA/Harvard by hand is tedious and inconsistent, especially for multi-author works.",
+      approach:
+        "A single-page tool that formats citations across four source types with one-click copy and auto-saved history — no account needed.",
+      architecture:
+        "Vanilla JavaScript front end with local persistence; pure formatting rules per style guide, no backend.",
+      outcome:
+        "A zero-signup citation tool that handles books, journals, websites and newspapers and keeps a local history.",
+    },
   },
   {
     repo: "ai-influencer-generator",
@@ -40,6 +60,16 @@ const FEATURED: FeaturedMeta[] = [
       "Full-stack app to create consistent AI influencer identities and generate images, with async image jobs (Celery/Redis) and S3-compatible storage.",
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "FastAPI", "Celery", "PostgreSQL"],
     liveUrl: "https://ai-influencer-generator.vercel.app",
+    caseStudy: {
+      challenge:
+        "Generated AI personas drift in appearance across images, breaking brand consistency.",
+      approach:
+        "Persist a persona's defining traits and reuse them on every generation so faces and style stay consistent across a campaign.",
+      architecture:
+        "Next.js front end, FastAPI service, Celery + Redis for async image jobs, PostgreSQL for state, S3-compatible object storage for assets.",
+      outcome:
+        "A full-stack app that creates reusable influencer identities and generates consistent images via an async job pipeline.",
+    },
   },
 ];
 

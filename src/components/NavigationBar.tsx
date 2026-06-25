@@ -151,13 +151,15 @@ export function NavigationBar() {
                 key={id}
                 href={`#${id}`}
                 aria-current={active ? "true" : undefined}
-                className="transition-colors hover:opacity-70 inline-flex items-center gap-1.5"
+                className="relative transition-colors hover:opacity-70 inline-flex items-center gap-1.5 px-1"
                 style={{ color: linkColor(active) }}
               >
                 {active && (
-                  <span
-                    className="w-1.5 h-1.5 rounded-full"
+                  <motion.span
+                    layoutId="nav-indicator"
+                    className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full"
                     style={{ backgroundColor: "var(--orange)" }}
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     aria-hidden="true"
                   />
                 )}

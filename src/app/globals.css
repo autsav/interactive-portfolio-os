@@ -200,6 +200,54 @@ html.light {
   .hairline-orange {
     border-top: 1px solid var(--border-hover);
   }
+
+  /* ── Ambient depth layers (Batch 2) ─────────────────────────── */
+
+  /* Drifting aurora behind the hero — two soft blobs, very low opacity, never
+     competing with text. Gated off under reduced-motion (animation → 0). */
+  .aurora {
+    position: absolute;
+    inset: -20%;
+    pointer-events: none;
+    opacity: 0.5;
+    background:
+      radial-gradient(40% 50% at 20% 30%, var(--orange-glow), transparent 70%),
+      radial-gradient(45% 55% at 80% 70%, var(--blue-dim), transparent 70%);
+    filter: blur(40px);
+    animation: aurora-drift 24s ease-in-out infinite alternate;
+    mix-blend-mode: screen;
+  }
+
+  /* Film-grain overlay — fixed, very low opacity, pointer-events:none. Uses an
+     inline SVG turbulence so there's no extra request. */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Breathing vignette — fixed radial falloff, subtle scale pulse. */
+  .vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(120% 120% at 50% 40%, transparent 55%, rgba(0,0,0,0.35) 100%);
+    animation: vignette-breathe 12s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes aurora-drift {
+  0%   { transform: translate3d(-4%, -2%, 0) scale(1); }
+  100% { transform: translate3d(4%, 3%, 0) scale(1.08); }
+}
+
+@keyframes vignette-breathe {
+  0%   { opacity: 0.85; }
+  100% { opacity: 1; }
 }
 
 /* ─────────────────────────────────────────────────────────

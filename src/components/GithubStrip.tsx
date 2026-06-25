@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { Github, Star, Users, FolderGit2, AlertTriangle } from "lucide-react";
 import { GithubData } from "@/types/project";
 import { usePrefersReducedMotion } from "@/lib/hooks";
@@ -9,6 +10,10 @@ import { usePrefersReducedMotion } from "@/lib/hooks";
 interface GithubStripProps {
   data: GithubData;
 }
+
+// Recharts needs concrete fill colours (SVG `fill` won't resolve CSS vars
+// reliably). Brand-aligned, accessible-on-dark palette.
+const LANG_BAR_COLORS = ["#FD7024", "#93C5FD", "#C084FC", "#34d399", "#FFD4B3", "#60A5FA"];
 
 /** Numbers animate 0 → value on scroll-into-view; reduced-motion (and the
  *  pre-inView state) renders the final value instantly. Null (couldn't source)
@@ -43,6 +48,7 @@ function CountUp({ value }: { value: number | null }) {
 
 export function GithubStrip({ data }: GithubStripProps) {
   const { profile, totalStars, topLanguages, ok } = data;
+  const reducedMotion = usePrefersReducedMotion();
 
   const stats: { label: string; value: number | null; icon: typeof Star }[] = [
     { label: "Public repos", value: profile?.publicRepos ?? null, icon: FolderGit2 },
@@ -111,7 +117,7 @@ export function GithubStrip({ data }: GithubStripProps) {
           <p className="mono text-[10px] uppercase tracking-widest mb-3" style={{ color: "var(--fg-muted)" }}>
             Most-used languages across public repos
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mb-4">
             {topLanguages.map((lang) => (
               <span
                 key={lang.name}
@@ -121,6 +127,38 @@ export function GithubStrip({ data }: GithubStripProps) {
                 {lang.name} <span style={{ color: "var(--fg-muted)" }}>· {lang.count}</span>
               </span>
             ))}
+          </div>
+          <div style={{ width: "100%", height: 200 }} aria-hidden="true">
+            <ResponsiveContainer>
+              <BarChart data={topLanguages} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
+                <XAxis type="number" hide />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={110}
+                  tick={{ fill: "var(--fg-muted)", fontSize: 11, fontFamily: "IBM Plex Mono, monospace" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  cursor={{ fill: "var(--orange-dim)" }}
+                  contentStyle={{
+                    background: "var(--bg-surface)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 12,
+                    fontSize: 12,
+                    fontFamily: "IBM Plex Mono, monospace",
+                    color: "var(--fg)",
+                  }}
+                  formatter={(value) => [`${value} repos`, "Count"] as [string, string]}
+                />
+                <Bar dataKey="count" radius={[0, 6, 6, 0]} isAnimationActive={!reducedMotion}>
+                  {topLanguages.map((lang, i) => (
+                    <Cell key={lang.name} fill={LANG_BAR_COLORS[i % LANG_BAR_COLORS.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       )}

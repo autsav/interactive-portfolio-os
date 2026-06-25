@@ -130,6 +130,10 @@ export function HeroSection() {
         <UniverseCanvas />
       </div>
 
+      {/* Drifting aurora — a soft, low-opacity colour wash behind the stars.
+          Gated off under reduced-motion (animation → 0 in globals.css). */}
+      <div className="aurora" aria-hidden="true" />
+
       {/* Bottom gradient fade */}
       <div
         className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"

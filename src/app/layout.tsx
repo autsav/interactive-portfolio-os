@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { CustomCursor } from "@/components/CustomCursor";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -54,7 +55,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body suppressHydrationWarning>
         <a href="#main" className="skip-link">Skip to content</a>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          {/* Ambient depth + cursor ring — all pointer-fine + motion-OK gated,
+              pointer-events:none, behind content. */}
+          <CustomCursor />
+          <div className="grain" aria-hidden="true" />
+          <div className="vignette" aria-hidden="true" />
+        </ThemeProvider>
       </body>
     </html>
   );
