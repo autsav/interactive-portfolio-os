@@ -6,6 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 
 import { Github, Star, Users, FolderGit2, AlertTriangle } from "lucide-react";
 import { GithubData } from "@/types/project";
 import { usePrefersReducedMotion } from "@/lib/hooks";
+import { ContributionGraph } from "./ContributionGraph";
 
 interface GithubStripProps {
   data: GithubData;
@@ -162,6 +163,11 @@ export function GithubStrip({ data }: GithubStripProps) {
           </div>
         </div>
       )}
+
+      {/* Contribution heatmap — last year. Needs GITHUB_TOKEN; otherwise an
+          honest empty-state (never a fabricated grid). Static viz → renders on
+          touch + under reduced-motion. */}
+      <ContributionGraph data={data.contributions} />
 
       {!ok && (
         <div

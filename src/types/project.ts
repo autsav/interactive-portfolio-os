@@ -57,4 +57,17 @@ export interface GithubData {
   /** Most-used primary languages across public repos. */
   topLanguages: { name: string; count: number }[];
   featured: FeaturedProject[];
+  /**
+   * Contribution heatmap for the last year (GraphQL, requires GITHUB_TOKEN).
+   * null when no token is configured or the fetch failed — the UI then shows
+   * an honest empty-state and never fabricates a grid.
+   */
+  contributions: ContributionData | null;
+}
+
+/** A year of GitHub contributions, grouped into week columns (7 days each). */
+export interface ContributionData {
+  total: number;
+  /** weeks[weekIndex][dayIndex 0..6] = { date, count }. */
+  weeks: { date: string; count: number }[][];
 }

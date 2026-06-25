@@ -17,8 +17,29 @@ BASE = 7898305 (design-fixes merged; live-feel branch HEAD before B1-2 onward)
   - client-only (NowStrip, count-up, tilt, scroll bar, dolly) hydrate post-load
   - commits: B1-0/1 = 7898305, B1-2/3/4 = c810744 (branch live-feel)
 
-## Batch 2 — queued (depth + polish; follow-up session)
-- Contribution heatmap (#3) · deploy/status pill (#7) · aurora hero bg (#11) ·
-  grain+vignette (#12) · custom cursor ring (#14) · sliding active-nav (#16) ·
-  case-study modal (#17) · recharts lang viz (#18) · tech marquee (#19) ·
-  dynamic OG + favicon + 404 (#20)
+## Batch 2 — depth + polish (complete)
+
+- #7 deploy/status pill: complete (Footer)
+- #11 aurora hero bg: complete (globals.css + HeroSection)
+- #12 grain + vignette: complete (globals.css + layout)
+- #14 custom cursor ring: complete (CustomCursor.tsx, native cursor kept)
+- #16 sliding active-nav indicator: complete (NavigationBar layoutId)
+- #17 case-study modal: complete (ProjectModal + types + FEATURED caseStudy +
+  FeaturedProjects Case study button)
+- #18 recharts language viz: complete (GithubStrip horizontal bar + chip legend)
+- #19 tech marquee: complete (TechMarquee.tsx, mounted in SkillsSection)
+- #20 dynamic OG + favicon + 404: complete (opengraph-image.tsx, icon.tsx,
+  not-found.tsx)
+- #3 contribution heatmap: SKIPPED (needs GITHUB_TOKEN; degrades to empty
+  without it — revisit when a token is set)
+
+Batch 2 commit: 9bfdb20 (branch live-feel)
+Deploy: dpl_B3MCyJXDjMDCMajDmf6PeMxNo5L5 → READY → www.utsabadhikari.com
+Verified live SSR: Deployed via Vercel / Case study / Backed by the / aurora /
+  grain present; /opengraph-image + /icon → 200 image/png; 404 branded
+  ("drifted off orbit" + Back to home).
+
+## Outstanding (non-blocking)
+- GitHub out of sync: live-feel branch local only; origin/main pre-live-feel.
+- Vercel git-integration mismatch: repo remote autsav/interactive-portfolio-os,
+  but live domain is the separate `interactive-portfolio` project.

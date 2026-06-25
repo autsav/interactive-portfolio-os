@@ -1,4 +1,4 @@
-import { FeaturedMeta, FeaturedProject, GithubData } from "@/types/project";
+import { FeaturedMeta, FeaturedProject, GithubData, ContributionData } from "@/types/project";
 
 const USERNAME = "autsav";
 const API = "https://api.github.com";
@@ -141,7 +141,63 @@ function emptyData(): GithubData {
     totalStars: null,
     topLanguages: [],
     featured: FEATURED.map(fallbackFeatured),
+    contributions: null,
   };
+}
+
+/**
+ * Contribution heatmap via the GraphQL API. GraphQL requires authentication,
+ * so without GITHUB_TOKEN this returns null (the UI shows an honest
+ * empty-state — never a fabricated grid). Never throws; any failure → null.
+ */
+const CONTRIBUTIONS_QUERY = `
+  query($login: String!) {
+    user(login: $login) {
+      contributionsCollection {
+        contributionCalendar {
+          totalContributions
+          weeks {
+            contributionDays {
+              contributionCount
+              date
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+async function fetchContributions(): Promise<ContributionData | null> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return null; // GraphQL needs auth — degrade to empty-state.
+  try {
+    const res = await fetch("https://api.github.com/graphql", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query: CONTRIBUTIONS_QUERY, variables: { login: USERNAME } }),
+      next: { revalidate: REVALIDATE_SECONDS },
+    });
+    if (!res.ok) return null;
+    const json = (await res.json()) as {
+      data?: { user?: { contributionsCollection?: { contributionCalendar?: {
+        totalContributions: number;
+        weeks: { contributionDays: { contributionCount: number; date: string }[] }[];
+      } } } };
+    };
+    const cal = json?.data?.user?.contributionsCollection?.contributionCalendar;
+    if (!cal) return null;
+    const weeks = cal.weeks.map((w) =>
+      w.contributionDays.map((d) => ({ date: d.date, count: d.contributionCount }))
+    );
+    return { total: cal.totalContributions, weeks };
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -152,7 +208,7 @@ function emptyData(): GithubData {
  */
 export async function getGithubData(): Promise<GithubData> {
   try {
-    const [userRes, reposRes] = await Promise.all([
+    const [userRes, reposRes, contributions] = await Promise.all([
       fetch(`${API}/users/${USERNAME}`, {
         headers: headers(),
         next: { revalidate: REVALIDATE_SECONDS },
@@ -161,6 +217,8 @@ export async function getGithubData(): Promise<GithubData> {
         headers: headers(),
         next: { revalidate: REVALIDATE_SECONDS },
       }),
+      // Independent + non-throwing: null when no token or fetch fails.
+      fetchContributions(),
     ]);
 
     if (!userRes.ok || !reposRes.ok) return emptyData();
@@ -218,6 +276,7 @@ export async function getGithubData(): Promise<GithubData> {
       totalStars,
       topLanguages,
       featured,
+      contributions,
     };
   } catch {
     // Network/parse error — degrade gracefully, never crash the page.
