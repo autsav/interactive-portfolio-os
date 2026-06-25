@@ -1,30 +1,68 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { ArrowDown, MapPin, FileText } from "lucide-react";
 import { UniverseCanvas } from "./UniverseCanvas";
+import { usePrefersReducedMotion, usePointerFine } from "@/lib/hooks";
 
 // Real, defensible facets of the same person — not invented seniority.
 const ROLES = ["Full-stack engineer", "Backend developer", "AI & automation builder"];
 
-// Subscribe to the OS reduced-motion preference via an external store — no
-// setState-in-effect, and SSR-safe (server snapshot is false).
-function usePrefersReducedMotion() {
-  return useSyncExternalStore(
-    (onChange) => {
-      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-      mq.addEventListener("change", onChange);
-      return () => mq.removeEventListener("change", onChange);
-    },
-    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    () => false
+/** London time + a soft, clearly-"probably" working-hours phrase. Never a
+ *  hard claim about what I'm doing — just a living, location-aware signal. */
+function useLondonStatus(): { time: string; phrase: string } {
+  const [state, setState] = useState({ time: "", phrase: "" });
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      const time = now.toLocaleTimeString("en-US", {
+        timeZone: "Europe/London",
+        hour12: true,
+        hour: "numeric",
+        minute: "2-digit",
+      });
+      const hour = parseInt(
+        now.toLocaleString("en-GB", { timeZone: "Europe/London", hour: "numeric", hour12: false }),
+        10
+      );
+      const weekday = now.toLocaleString("en-GB", { timeZone: "Europe/London", weekday: "short" });
+      const isWeekend = weekday === "Sat" || weekday === "Sun";
+      let phrase: string;
+      if (isWeekend && hour >= 9 && hour < 23) phrase = "probably building something on the side";
+      else if (hour >= 9 && hour < 18) phrase = "probably shipping code right now";
+      else if (hour >= 18 && hour < 23) phrase = "probably still tinkering";
+      else phrase = "probably asleep — but still for hire";
+      setState({ time, phrase });
+    };
+    tick();
+    const i = setInterval(tick, 30_000);
+    return () => clearInterval(i);
+  }, []);
+
+  return state;
+}
+
+function HeroStatus() {
+  const { time, phrase } = useLondonStatus();
+  return (
+    <span
+      suppressHydrationWarning
+      className="mono text-[11px] tracking-[0.12em] uppercase inline-flex items-center gap-1.5"
+      style={{ color: "var(--fg-muted)" }}
+    >
+      <MapPin size={12} style={{ color: "var(--orange)" }} />
+      {time ? `London · ${time} — ${phrase}` : "London · remote"}
+    </span>
   );
 }
 
 export function HeroSection() {
   const roleRef = useRef<HTMLSpanElement>(null);
   const reducedMotion = usePrefersReducedMotion();
+  const pointerFine = usePointerFine();
+  const magnetic = pointerFine && !reducedMotion;
 
   useEffect(() => {
     if (!roleRef.current) return;
@@ -67,6 +105,23 @@ export function HeroSection() {
     return () => clearTimeout(timeout);
   }, [reducedMotion]);
 
+  // Magnetic primary CTA — the button drifts a fraction toward the cursor.
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 200, damping: 15, mass: 0.4 });
+  const sy = useSpring(my, { stiffness: 200, damping: 15, mass: 0.4 });
+
+  function onCtaMove(e: React.MouseEvent<HTMLAnchorElement>) {
+    if (!magnetic) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    mx.set((e.clientX - (r.left + r.width / 2)) * 0.3);
+    my.set((e.clientY - (r.top + r.height / 2)) * 0.3);
+  }
+  function onCtaLeave() {
+    mx.set(0);
+    my.set(0);
+  }
+
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
       {/* Three.js backdrop. It fails silently (no WebGL) and is decorative only,
@@ -96,12 +151,7 @@ export function HeroSection() {
             <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--green)" }} />
             Available for hire
           </span>
-          <span
-            className="mono text-[11px] tracking-[0.15em] uppercase inline-flex items-center gap-1.5"
-            style={{ color: "var(--fg-muted)" }}
-          >
-            <MapPin size={12} style={{ color: "var(--orange)" }} /> London · remote
-          </span>
+          <HeroStatus />
         </motion.div>
 
         <motion.h1
@@ -144,14 +194,16 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.7 }}
           className="flex flex-wrap gap-4 justify-center items-center"
         >
-          {/* Single primary CTA — the rest live in the nav + footer. */}
-          <a
+          {/* Single primary CTA — magnetic on pointer devices. The rest live in nav + footer. */}
+          <motion.a
             href="#projects"
-            className="px-7 py-3.5 text-white font-semibold rounded-full transition-transform hover:scale-105 active:scale-95 glow-orange"
-            style={{ backgroundColor: "var(--orange)" }}
+            onMouseMove={onCtaMove}
+            onMouseLeave={onCtaLeave}
+            style={magnetic ? { x: sx, y: sy } : undefined}
+            className="px-7 py-3.5 text-white font-semibold rounded-full transition-transform active:scale-95 glow-orange"
           >
             See the work
-          </a>
+          </motion.a>
           <a
             href="/resume.pdf"
             target="_blank"

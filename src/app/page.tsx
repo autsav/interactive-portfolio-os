@@ -5,6 +5,7 @@ import { GithubStrip } from "@/components/GithubStrip";
 import { SkillsSection } from "@/components/SkillsSection";
 import { Footer } from "@/components/Footer";
 import { HeroSectionClient, CommandPaletteClient } from "@/components/ClientShell";
+import { CursorSpotlight } from "@/components/CursorSpotlight";
 
 // Revalidate daily — matches the GitHub fetch cache and keeps us well under the
 // unauthenticated API rate limit.
@@ -20,6 +21,10 @@ export default async function Home() {
       style={{ backgroundColor: "var(--bg)", color: "var(--fg)" }}
     >
       <NavigationBar />
+
+      {/* Ambient cursor spotlight — pointer-fine + motion-OK only (renders
+          null otherwise). Decorative, behind content. */}
+      <CursorSpotlight />
 
       {/* Hero — client-only (Three.js backdrop, fails gracefully) */}
       <HeroSectionClient />
