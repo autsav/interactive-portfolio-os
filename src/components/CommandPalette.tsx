@@ -111,8 +111,8 @@ export function CommandPalette({ projects }: CommandPaletteProps) {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-between p-3 rounded-xl transition-colors group cursor-pointer"
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--orange-dim)"}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent"}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--orange-dim)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                       >
                         <div className="flex items-center gap-3">
                           <div
