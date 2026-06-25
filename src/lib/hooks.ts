@@ -51,16 +51,25 @@ export function useMounted(): boolean {
  * not motion, and accuracy matters for the "live" feel).
  */
 export function useRelativeTime(iso: string | null): string {
-  const [, setTick] = useState(0);
+  // `now` is held in state (pure render derives from it). The effect is the
+  // only impure caller of Date.now() — updated once on mount and every minute.
+  const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
     if (!iso) return;
-    const interval = setInterval(() => setTick((t) => t + 1), 60_000);
-    return () => clearInterval(interval);
+    // Defer the initial read to a frame so setState never fires synchronously
+    // in the effect body (rule: setState belongs in an external callback).
+    const tick = () => setNow(Date.now());
+    const raf = requestAnimationFrame(tick);
+    const interval = setInterval(tick, 60_000);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearInterval(interval);
+    };
   }, [iso]);
 
-  if (!iso) return "";
-  const diffMs = Date.now() - new Date(iso).getTime();
+  if (!iso || now === null) return "";
+  const diffMs = now - new Date(iso).getTime();
   const sec = Math.round(diffMs / 1000);
   if (sec < 60) return "just now";
   const min = Math.round(sec / 60);

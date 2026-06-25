@@ -110,6 +110,17 @@ export function UniverseCanvas() {
     };
     if (!prefersReducedMotion) window.addEventListener("mousemove", onMouseMove);
 
+    // Scroll-driven camera dolly: as you read past the hero the camera
+    // dollies out (z grows) so the universe recedes. 0 at top of page.
+    let scrollProgress = 0;
+    const onScroll = () => {
+      scrollProgress = Math.min(Math.max(window.scrollY / window.innerHeight, 0), 1);
+    };
+    if (!prefersReducedMotion) {
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+    }
+
     // ── Animation Loop ─────────────────────────────────────────────
     let animId: number;
     let isVisible = true;
@@ -140,6 +151,9 @@ export function UniverseCanvas() {
       // Parallax
       camera.position.x += (mouseX * 3 - camera.position.x) * 0.02;
       camera.position.y += (mouseY * 3 - camera.position.y) * 0.02;
+      // Scroll dolly — ease z toward target.
+      const targetZ = 30 + scrollProgress * 16;
+      camera.position.z += (targetZ - camera.position.z) * 0.05;
       camera.lookAt(0, 0, 0);
 
       // Pulsate orange light
@@ -168,6 +182,7 @@ export function UniverseCanvas() {
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       observer.disconnect();
       renderer.dispose();

@@ -6,6 +6,8 @@ import { SkillsSection } from "@/components/SkillsSection";
 import { Footer } from "@/components/Footer";
 import { HeroSectionClient, CommandPaletteClient } from "@/components/ClientShell";
 import { CursorSpotlight } from "@/components/CursorSpotlight";
+import { NowStrip } from "@/components/NowStrip";
+import { ScrollProgress } from "@/components/ScrollProgress";
 
 // Revalidate daily — matches the GitHub fetch cache and keeps us well under the
 // unauthenticated API rate limit.
@@ -22,12 +24,20 @@ export default async function Home() {
     >
       <NavigationBar />
 
+      {/* Top scroll-progress bar — scroll-linked, renders under reduced-motion
+          too (no spring easing then). */}
+      <ScrollProgress />
+
       {/* Ambient cursor spotlight — pointer-fine + motion-OK only (renders
           null otherwise). Decorative, behind content. */}
       <CursorSpotlight />
 
       {/* Hero — client-only (Three.js backdrop, fails gracefully) */}
       <HeroSectionClient />
+
+      {/* "Currently shipping" — auto-derived from the most-recently-pushed
+          featured repo; updates with the daily cache. Renders null if none. */}
+      <NowStrip projects={github.featured} />
 
       {/* Featured work — demo-first cards with real, live star/fork counts */}
       <FeaturedProjects projects={github.featured} />

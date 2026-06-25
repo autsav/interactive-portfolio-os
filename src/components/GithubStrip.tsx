@@ -1,24 +1,53 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
 import { Github, Star, Users, FolderGit2, AlertTriangle } from "lucide-react";
 import { GithubData } from "@/types/project";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 interface GithubStripProps {
   data: GithubData;
 }
 
-function num(value: number | null): string {
-  return value === null ? "—" : value.toLocaleString("en-GB");
+/** Numbers animate 0 → value on scroll-into-view; reduced-motion (and the
+ *  pre-inView state) renders the final value instantly. Null (couldn't source)
+ *  renders an em dash. setState only happens inside the spring's change
+ *  callback — never synchronously in the effect body. */
+function CountUp({ value }: { value: number | null }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const reducedMotion = usePrefersReducedMotion();
+
+  const animate = inView && !reducedMotion && value !== null;
+  const finalText = value === null ? "—" : value.toLocaleString("en-GB");
+
+  const mv = useMotionValue(0);
+  const spring = useSpring(mv, { stiffness: 80, damping: 22 });
+  const [text, setText] = useState("0");
+
+  useEffect(() => {
+    if (!animate || value === null) return;
+    // Spring from 0 → value; the change callback drives text (async, not in
+    // the effect body).
+    mv.set(0);
+    const unsub = spring.on("change", (v) => setText(Math.round(v).toLocaleString("en-GB")));
+    mv.set(value);
+    return () => unsub();
+  }, [animate, value, mv, spring]);
+
+  // Static path (reduced-motion, off-screen, or null) ignores `text` entirely.
+  if (!animate) return <span ref={ref}>{finalText}</span>;
+  return <span ref={ref}>{text}</span>;
 }
 
 export function GithubStrip({ data }: GithubStripProps) {
   const { profile, totalStars, topLanguages, ok } = data;
 
-  const stats = [
-    { label: "Public repos", value: num(profile?.publicRepos ?? null), icon: FolderGit2 },
-    { label: "Followers", value: num(profile?.followers ?? null), icon: Users },
-    { label: "Total stars", value: num(totalStars), icon: Star },
+  const stats: { label: string; value: number | null; icon: typeof Star }[] = [
+    { label: "Public repos", value: profile?.publicRepos ?? null, icon: FolderGit2 },
+    { label: "Followers", value: profile?.followers ?? null, icon: Users },
+    { label: "Total stars", value: totalStars, icon: Star },
   ];
 
   return (
@@ -29,7 +58,20 @@ export function GithubStrip({ data }: GithubStripProps) {
         viewport={{ once: true }}
         className="mb-10 text-center"
       >
-        <span className="mono text-xs tracking-[0.35em] uppercase mb-4 block" style={{ color: "var(--orange)" }}>
+        <span className="mono text-xs tracking-[0.35em] uppercase mb-4 flex items-center justify-center gap-2" style={{ color: "var(--orange)" }}>
+          {/* Live-data pulse — "Pulled live from GitHub, cached daily". */}
+          <span
+            title="Pulled live from GitHub, cached daily"
+            className="relative flex h-2 w-2"
+            aria-label="Live data, refreshed daily"
+          >
+            <span
+              className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping"
+              style={{ backgroundColor: "var(--green)" }}
+              aria-hidden="true"
+            />
+            <span className="relative inline-flex h-2 w-2 rounded-full" style={{ backgroundColor: "var(--green)" }} />
+          </span>
           ◈ Live from GitHub
         </span>
         <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-3" style={{ color: "var(--fg)" }}>
@@ -41,16 +83,25 @@ export function GithubStrip({ data }: GithubStripProps) {
       </motion.div>
 
       <div className="grid grid-cols-3 gap-3 md:gap-4 mb-6">
-        {stats.map((s) => {
+        {stats.map((s, i) => {
           const Icon = s.icon;
           return (
-            <div key={s.label} className="bento-card p-5 md:p-6 flex flex-col items-center text-center">
+            <motion.div
+              key={s.label}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ type: "spring", stiffness: 120, damping: 18, delay: i * 0.08 }}
+              className="bento-card p-5 md:p-6 flex flex-col items-center text-center"
+            >
               <Icon size={20} className="mb-3" style={{ color: "var(--orange)" }} />
-              <span className="text-2xl md:text-3xl font-bold mono" style={{ color: "var(--fg)" }}>{s.value}</span>
+              <span className="text-2xl md:text-3xl font-bold mono tabular-nums" style={{ color: "var(--fg)" }}>
+                <CountUp value={s.value} />
+              </span>
               <span className="mono text-[10px] uppercase tracking-wider mt-1" style={{ color: "var(--fg-muted)" }}>
                 {s.label}
               </span>
-            </div>
+            </motion.div>
           );
         })}
       </div>
