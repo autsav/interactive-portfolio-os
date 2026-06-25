@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://utsabadhikari.com"),
   title: "Utsab Adhikari | Full-stack & AI Engineer",
   description:
-    "Full-stack and backend engineer in London building AI agents, APIs and web apps with TypeScript/Node and Python. Open to visa-sponsored UK roles.",
+    "Full-stack and backend engineer in London building AI agents, APIs and web apps with TypeScript/Node and Python. Available for hire — London / remote.",
   keywords: ["Utsab Adhikari", "Full-stack Developer", "Backend Developer", "AI Engineer", "Next.js", "Python", "TypeScript", "London"],
   alternates: { canonical: "/" },
   openGraph: {
@@ -53,6 +53,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body suppressHydrationWarning>
+        <a href="#main" className="skip-link">Skip to content</a>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

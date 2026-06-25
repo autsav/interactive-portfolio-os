@@ -24,6 +24,8 @@ html.dark {
   --orange-dim:   rgba(253,112,36,0.12);
   --orange-glow:  rgba(253,112,36,0.10);
   --blue:         #3B82F6;
+  --blue-soft:    #93C5FD;
+  --blue-dim:     rgba(59,130,246,0.12);
   --green:        #34d399;
   --purple:       #C084FC;
   --glass-blur:   blur(20px);
@@ -46,6 +48,8 @@ html.light {
   --orange-dim:   rgba(232,96,16,0.08);
   --orange-glow:  rgba(232,96,16,0.05);
   --blue:         #2563EB;
+  --blue-soft:    #60A5FA;
+  --blue-dim:     rgba(37,99,235,0.10);
   --green:        #059669;
   --purple:       #9333EA;
   --glass-blur:   blur(16px);
@@ -74,21 +78,50 @@ html.light {
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
-    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Transition for all theme-sensitive properties */
-  *, *::before, *::after {
-    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Theme transition lives on the body only — a universal transition on every
+     element causes jank on scroll/hover and fights the typewriter. Individual
+     components opt into transitions via their own rules / .bento-card etc. */
+  body {
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   ::selection {
     background: rgba(253,112,36,0.25);
     color: var(--fg);
+  }
+
+  /* Keyboard focus ring — visible only for keyboard users (focus-visible),
+     never for mouse clicks. */
+  :focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Skip-to-content link — off-screen until keyboard-focused. */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 200;
+    transform: translateY(-150%);
+    padding: 0.6rem 1.1rem;
+    border-radius: 0.6rem;
+    background: var(--orange);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    font-family: "IBM Plex Mono", monospace;
+    letter-spacing: 0.02em;
+    transition: transform 0.18s ease;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
   }
 
   ::-webkit-scrollbar { width: 5px; }
@@ -167,69 +200,18 @@ html.light {
   .hairline-orange {
     border-top: 1px solid var(--border-hover);
   }
-
-  /* Caustic animation */
-  @keyframes caustic {
-    0%, 100% { opacity: 0.04; transform: scale(1) rotate(0deg); }
-    33%       { opacity: 0.07; transform: scale(1.1) rotate(5deg); }
-    66%       { opacity: 0.03; transform: scale(0.95) rotate(-3deg); }
-  }
-  .caustic-light { animation: caustic 8s ease-in-out infinite; }
-
-  @keyframes float-slow {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-12px); }
-  }
-  .float-slow { animation: float-slow 6s ease-in-out infinite; }
-
-  @keyframes pulse-orange {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(253,112,36,0.4); }
-    50%       { box-shadow: 0 0 0 8px rgba(253,112,36,0); }
-  }
-  .pulse-orange { animation: pulse-orange 2s ease-in-out infinite; }
-
-  @keyframes scan-line {
-    0%   { transform: translateY(-100%); }
-    100% { transform: translateY(100vh); }
-  }
-  .scan-line { animation: scan-line 8s linear infinite; }
 }
 
 /* ─────────────────────────────────────────────────────────
-   LIGHT MODE — override hardcoded dark Tailwind classes
-   so theme switch is visible even in unmigrated components
+   REDUCED MOTION — disable all CSS animations + transitions.
+   Framer Motion is gated separately via <MotionConfig reducedMotion="user">
+   in ThemeProvider. The typewriter in HeroSection also checks this preference.
    ───────────────────────────────────────────────────────── */
-html.light {
-  /* Page & section backgrounds */
-  background-color: var(--bg);
-
-  /* Catch hardcoded dark text Tailwind classes */
-  .text-\[\#F5ECD7\]  { color: var(--fg) !important; }
-  .text-\[\#5a5a6e\]  { color: var(--fg-muted) !important; }
-  .text-\[\#c8bfaf\]  { color: var(--fg-muted) !important; }
-
-  /* Catch hardcoded dark backgrounds */
-  .bg-\[\#070709\]    { background-color: var(--bg) !important; }
-  .bg-black           { background-color: var(--bg) !important; }
-  .bg-black\/80       { background-color: var(--bg-surface) !important; }
-
-  /* White/border utilities that assume dark bg */
-  .border-white\/5    { border-color: var(--border) !important; }
-  .border-white\/6    { border-color: var(--border) !important; }
-  .border-white\/8    { border-color: var(--border) !important; }
-  .bg-white\/4        { background-color: rgba(0,0,0,0.04) !important; }
-  .bg-white\/3        { background-color: rgba(0,0,0,0.03) !important; }
-  .bg-white\/2        { background-color: rgba(0,0,0,0.02) !important; }
-  .bg-white\/5        { background-color: rgba(0,0,0,0.05) !important; }
-
-  /* Neutral / zinc shades on dark components */
-  .text-neutral-400   { color: var(--fg-muted) !important; }
-  .text-neutral-500   { color: var(--fg-muted) !important; }
-  .text-neutral-600   { color: var(--fg-subtle) !important; }
-  .text-neutral-700   { color: var(--fg-subtle) !important; }
-  .bg-neutral-900     { background-color: rgba(0,0,0,0.05) !important; }
-  .border-neutral-800 { border-color: var(--border) !important; }
-
-  /* MLOps / bento hardcoded dark text */
-  .text-\[\#F5ECD7\], .text-white { color: var(--fg) !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

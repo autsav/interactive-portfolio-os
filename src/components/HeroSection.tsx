@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown, Github, MapPin } from "lucide-react";
+import { ArrowDown, MapPin, FileText } from "lucide-react";
 import { UniverseCanvas } from "./UniverseCanvas";
 
 // Real, defensible facets of the same person — not invented seniority.
@@ -94,13 +94,13 @@ export function HeroSection() {
             style={{ color: "var(--green)", borderColor: "var(--border-hover)", backgroundColor: "var(--orange-dim)" }}
           >
             <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--green)" }} />
-            Open to visa-sponsored UK roles
+            Available for hire
           </span>
           <span
             className="mono text-[11px] tracking-[0.15em] uppercase inline-flex items-center gap-1.5"
             style={{ color: "var(--fg-muted)" }}
           >
-            <MapPin size={12} style={{ color: "var(--orange)" }} /> London, UK
+            <MapPin size={12} style={{ color: "var(--orange)" }} /> London · remote
           </span>
         </motion.div>
 
@@ -144,21 +144,22 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.7 }}
           className="flex flex-wrap gap-4 justify-center items-center"
         >
+          {/* Single primary CTA — the rest live in the nav + footer. */}
           <a
             href="#projects"
-            className="px-7 py-3.5 text-white font-semibold rounded-full transition-transform hover:scale-105 glow-orange"
+            className="px-7 py-3.5 text-white font-semibold rounded-full transition-transform hover:scale-105 active:scale-95 glow-orange"
             style={{ backgroundColor: "var(--orange)" }}
           >
             See the work
           </a>
           <a
-            href="https://github.com/autsav"
+            href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-7 py-3.5 border font-semibold rounded-full transition-colors hover:border-orange-400/50 inline-flex items-center gap-2"
+            className="px-7 py-3.5 border font-semibold rounded-full transition-colors hover:opacity-80 active:scale-95 inline-flex items-center gap-2"
             style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
           >
-            <Github size={16} /> GitHub
+            <FileText size={16} /> Résumé
           </a>
         </motion.div>
       </div>

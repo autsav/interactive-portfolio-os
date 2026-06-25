@@ -11,8 +11,7 @@ interface SkillsSectionProps {
 // featured projects' stacks, so every chip is backed by something shipped.
 const BUCKETS: { title: string; match: string[] }[] = [
   { title: "Frontend", match: ["React", "Next.js", "TypeScript", "Vite", "Tailwind CSS", "HTML", "CSS", "JavaScript"] },
-  { title: "Backend & data", match: ["FastAPI", "Celery", "PostgreSQL", "Supabase", "Redis"] },
-  { title: "AI", match: ["Anthropic Claude"] },
+  { title: "Backend, data & AI", match: ["FastAPI", "Celery", "PostgreSQL", "Supabase", "Redis", "Anthropic Claude"] },
 ];
 
 export function SkillsSection({ projects }: SkillsSectionProps) {
@@ -27,7 +26,7 @@ export function SkillsSection({ projects }: SkillsSectionProps) {
   if (buckets.length === 0) return null;
 
   return (
-    <section id="skills" className="py-20 px-4 max-w-5xl mx-auto">
+    <section id="skills" className="py-24 px-4 max-w-6xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -45,7 +44,7 @@ export function SkillsSection({ projects }: SkillsSectionProps) {
         </p>
       </motion.div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2">
         {buckets.map((bucket) => (
           <div key={bucket.title} className="bento-card p-6">
             <h3 className="mono text-[11px] uppercase tracking-widest mb-4" style={{ color: "var(--fg-muted)" }}>

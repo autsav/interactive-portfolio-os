@@ -22,7 +22,7 @@ export function GithubStrip({ data }: GithubStripProps) {
   ];
 
   return (
-    <section id="github" className="py-20 px-4 max-w-5xl mx-auto">
+    <section id="github" className="py-24 px-4 max-w-6xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -79,7 +79,7 @@ export function GithubStrip({ data }: GithubStripProps) {
           className="flex items-center gap-2 justify-center mono text-[11px] mb-6 px-4 py-2 rounded-full mx-auto w-fit border"
           style={{ color: "var(--fg-muted)", borderColor: "var(--border)" }}
         >
-          <AlertTriangle size={12} className="text-orange-400" />
+          <AlertTriangle size={12} style={{ color: "var(--orange)" }} />
           Couldn&apos;t reach GitHub right now — links below still work.
         </div>
       )}
@@ -89,7 +89,7 @@ export function GithubStrip({ data }: GithubStripProps) {
           href={profile?.htmlUrl ?? "https://github.com/autsav"}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold border transition-colors hover:border-orange-400/50"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold border transition-colors hover:opacity-80 active:scale-95"
           style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
         >
           <Github size={16} /> View full GitHub profile
