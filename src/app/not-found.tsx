@@ -13,7 +13,7 @@ export default function NotFound() {
         <span className="mono text-xs tracking-[0.35em] uppercase mb-4 block" style={{ color: "var(--orange)" }}>
           ◈ 404
         </span>
-        <h1 className="text-5xl md:text-6xl font-bold tracking-tighter mb-5">
+        <h1 className="font-display text-5xl md:text-6xl font-semibold tracking-tight mb-5" style={{ letterSpacing: "-0.02em" }}>
           This page <span className="text-gradient-orange">drifted off orbit.</span>
         </h1>
         <p className="text-base md:text-lg mb-8 leading-relaxed" style={{ color: "var(--fg-muted)" }}>

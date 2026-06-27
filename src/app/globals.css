@@ -1,66 +1,70 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────
-   CSS CUSTOM PROPERTIES
-   Defined per-theme so every component can use var()
+   REFINED COSMOS — design system
+   Linear's structural backbone + Resend's frost-tinted spark.
+   Fonts are self-hosted via next/font (see layout.tsx) and reach
+   here as --font-inter / --font-space / --font-jet.
    ───────────────────────────────────────────────────────── */
 
-/* DARK mode (Default) */
+/* DARK mode (default + primary experience) */
 :root,
 html.dark {
-  --bg:           #070709;
-  --bg-surface:   rgba(12,12,16,0.95);
-  --bg-card:      rgba(15,15,22,0.90);
-  --bg-card-hover:rgba(20,20,30,0.97);
-  --fg:           #F5ECD7;
-  --fg-muted:     #9494a5; /* Brightened for dark mode */
-  --fg-subtle:    #5a5a6e;
-  --border:       rgba(255,255,255,0.08);
-  --border-card:  rgba(255,255,255,0.08);
-  --border-hover: rgba(253,112,36,0.30);
-  --shadow-card:  0 10px 40px rgba(0,0,0,0.6);
-  --orange:       #FD7024;
-  --orange-dim:   rgba(253,112,36,0.12);
-  --orange-glow:  rgba(253,112,36,0.10);
-  --blue:         #3B82F6;
-  --blue-soft:    #93C5FD;
-  --blue-dim:     rgba(59,130,246,0.12);
-  --green:        #34d399;
-  --purple:       #C084FC;
-  --glass-blur:   blur(20px);
+  --bg:            #08090a;            /* Linear marketing black */
+  --bg-surface:    rgba(15,16,17,0.95);
+  --bg-card:       rgba(25,26,27,0.60); /* transparent for glass */
+  --bg-card-hover: rgba(40,41,44,0.80); /* luminance step, not shadow */
+  --fg:            #f7f8f8;            /* never pure white */
+  --fg-muted:      #8a8f98;
+  --fg-subtle:     #62666d;
+  --border:        rgba(214,235,253,0.10); /* frost-tinted */
+  --border-card:   rgba(214,235,253,0.06);
+  --border-hover:  rgba(253,112,36,0.30);
+  --shadow-card:   none;               /* dark = luminance elevation */
+  --orange:        #FD7024;
+  --orange-dim:    rgba(253,112,36,0.10);
+  --orange-glow:   rgba(253,112,36,0.08);
+  --blue:          #3B9FF5;
+  --blue-soft:     #93C5FD;
+  --blue-dim:      rgba(59,159,245,0.12);
+  --green:         #10b981;
+  --purple:        #828fff;
+  --accent-frost:  rgba(214,235,253,0.19); /* Resend signature frost */
+  --glass-blur:    blur(20px);
 }
 
-/* LIGHT mode — Explicit override */
+/* LIGHT mode — also excellent, just not primary */
 html.light {
-  --bg:           #F7F3ED;
-  --bg-surface:   rgba(255,252,248,0.98);
-  --bg-card:      rgba(255,252,248,0.90);
-  --bg-card-hover:rgba(250,246,240,0.97);
-  --fg:           #1C1917;
-  --fg-muted:     #78716C;
-  --fg-subtle:    #A8A29E;
-  --border:       rgba(28,25,23,0.12);
-  --border-card:  rgba(28,25,23,0.08);
-  --border-hover: rgba(253,112,36,0.45);
-  --shadow-card:  0 8px 30px rgba(0,0,0,0.08);
-  --orange:       #E86010;
-  --orange-dim:   rgba(232,96,16,0.08);
-  --orange-glow:  rgba(232,96,16,0.05);
-  --blue:         #2563EB;
-  --blue-soft:    #60A5FA;
-  --blue-dim:     rgba(37,99,235,0.10);
-  --green:        #059669;
-  --purple:       #9333EA;
-  --glass-blur:   blur(16px);
+  --bg:            #F7F8F8;
+  --bg-surface:    rgba(255,255,255,0.95);
+  --bg-card:       rgba(255,255,255,0.80);
+  --bg-card-hover: rgba(255,255,255,0.96);
+  --fg:            #08090a;
+  --fg-muted:      #62666d;
+  --fg-subtle:     #8a8f98;
+  --border:        rgba(8,9,10,0.10);
+  --border-card:   rgba(8,9,10,0.06);
+  --border-hover:  rgba(232,96,16,0.40);
+  --shadow-card:   0 8px 30px rgba(8,9,10,0.06);
+  --orange:        #E86010;
+  --orange-dim:    rgba(232,96,16,0.08);
+  --orange-glow:   rgba(232,96,16,0.05);
+  --blue:          #2563EB;
+  --blue-soft:     #60A5FA;
+  --blue-dim:      rgba(37,99,235,0.10);
+  --green:         #059669;
+  --purple:        #5e6ad2;
+  --accent-frost:  rgba(37,99,235,0.14);
+  --glass-blur:    blur(16px);
 }
 
 /* ─────────────────────────────────────────────────────────
-   TAILWIND THEME TOKENS (static, non-theme-sensitive)
+   TAILWIND THEME TOKENS — map next/font vars to Tailwind families
    ───────────────────────────────────────────────────────── */
 @theme {
-  --font-mono: "IBM Plex Mono", monospace;
-  --font-sans: "IBM Plex Sans", sans-serif;
+  --font-sans:    var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-space), system-ui, sans-serif;
+  --font-mono:    var(--font-jet), ui-monospace, monospace;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -74,16 +78,14 @@ html.light {
   body {
     background-color: var(--bg);
     color: var(--fg);
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    /* Inter OpenType: cv01 (single-storey a-ish geometric set), ss03 */
+    font-feature-settings: "cv01", "ss03";
+    font-weight: 400;
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
-  }
-
-  /* Theme transition lives on the body only — a universal transition on every
-     element causes jank on scroll/hover and fights the typewriter. Individual
-     components opt into transitions via their own rules / .bento-card etc. */
-  body {
+    text-rendering: optimizeLegibility;
     transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
                 color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -93,8 +95,7 @@ html.light {
     color: var(--fg);
   }
 
-  /* Keyboard focus ring — visible only for keyboard users (focus-visible),
-     never for mouse clicks. */
+  /* Keyboard focus ring — visible only for keyboard users. */
   :focus-visible {
     outline: 2px solid var(--orange);
     outline-offset: 2px;
@@ -109,13 +110,13 @@ html.light {
     z-index: 200;
     transform: translateY(-150%);
     padding: 0.6rem 1.1rem;
-    border-radius: 0.6rem;
+    border-radius: 9999px;
     background: var(--orange);
     color: #fff;
-    font-weight: 600;
-    font-size: 0.85rem;
-    font-family: "IBM Plex Mono", monospace;
-    letter-spacing: 0.02em;
+    font-weight: 500;
+    font-size: 0.8rem;
+    font-family: var(--font-jet), monospace;
+    letter-spacing: 0.04em;
     transition: transform 0.18s ease;
   }
   .skip-link:focus {
@@ -124,14 +125,14 @@ html.light {
     outline-offset: 2px;
   }
 
-  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: var(--orange-dim);
+    background: var(--accent-frost);
     border-radius: 10px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--orange-dim);
+    background: var(--border-hover);
   }
 }
 
@@ -139,7 +140,14 @@ html.light {
    UTILITY CLASSES  (theme-aware via CSS vars)
    ───────────────────────────────────────────────────────── */
 @layer utilities {
-  /* Glass / surface */
+  /* Type families ----------------------------------------------------- */
+  .font-display {
+    font-family: var(--font-space), system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+  .mono { font-family: var(--font-jet), ui-monospace, monospace; }
+
+  /* Glass / surface --------------------------------------------------- */
   .glass {
     background: var(--bg-surface);
     backdrop-filter: var(--glass-blur);
@@ -153,7 +161,7 @@ html.light {
     border: 1px solid var(--border-hover);
   }
 
-  /* Bento card */
+  /* Frosted glass card — frost-tinted border, luminance elevation. */
   .bento-card {
     background: var(--bg-card);
     border: 1px solid var(--border-card);
@@ -161,17 +169,32 @@ html.light {
     -webkit-backdrop-filter: var(--glass-blur);
     border-radius: 1.25rem;
     box-shadow: var(--shadow-card);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease,
+                background 0.3s ease, transform 0.3s ease;
   }
 
   .bento-card:hover {
     border-color: var(--border-hover);
+    background: var(--bg-card-hover);
     box-shadow: 0 0 30px var(--orange-glow);
   }
 
-  /* Gradients */
+  /* Frost pill — icy-tinted border used on secondary CTAs / badges. */
+  .frost-pill {
+    border: 1px solid var(--accent-frost);
+    background: var(--bg-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-radius: 9999px;
+    transition: border-color 0.3s ease, background 0.3s ease, transform 0.2s ease;
+  }
+  .frost-pill:hover {
+    border-color: var(--border-hover);
+  }
+
+  /* Gradients --------------------------------------------------------- */
   .text-gradient-orange {
-    background: linear-gradient(135deg, var(--orange) 0%, #FF9A5C 50%, #FFD4B3 100%);
+    background: linear-gradient(135deg, var(--orange) 0%, #FF9A5C 55%, #FFD4B3 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -184,52 +207,62 @@ html.light {
     background-clip: text;
   }
 
-  /* Glows */
+  /* Glows ------------------------------------------------------------- */
   .glow-orange {
-    box-shadow: 0 0 30px var(--orange-dim), 0 0 80px var(--orange-glow);
+    background: var(--orange);
+    box-shadow: 0 0 0 1px rgba(253,112,36,0.30),
+                0 8px 24px rgba(253,112,36,0.25),
+                0 0 60px var(--orange-glow);
   }
 
   .glow-blue {
-    box-shadow: 0 0 30px var(--blue-dim), 0 0 80px rgba(59,130,246,0.04);
+    box-shadow: 0 0 30px var(--blue-dim), 0 0 80px rgba(59,159,245,0.04);
   }
 
-  /* Monospace text */
-  .mono { font-family: "IBM Plex Mono", monospace; }
-
-  /* orange hairline */
-  .hairline-orange {
-    border-top: 1px solid var(--border-hover);
+  /* Section divider — a subtle frost-tinted hairline for visual rhythm,
+     fading at both edges. Decorative rhythm marker, not a hard border. */
+  .section-divider {
+    height: 1px;
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--accent-frost) 30%,
+      var(--accent-frost) 70%,
+      transparent
+    );
   }
 
-  /* ── Ambient depth layers (Batch 2) ─────────────────────────── */
+  /* ── Ambient depth layers ───────────────────────────────────── */
 
-  /* Drifting aurora behind the hero — two soft blobs, very low opacity, never
-     competing with text. Gated off under reduced-motion (animation → 0). */
+  /* Drifting aurora — warm orange top-left, cool blue bottom-right.
+     Very low opacity, never competing with text. Gated under reduced motion. */
   .aurora {
     position: absolute;
     inset: -20%;
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 0.55;
     background:
-      radial-gradient(40% 50% at 20% 30%, var(--orange-glow), transparent 70%),
-      radial-gradient(45% 55% at 80% 70%, var(--blue-dim), transparent 70%);
-    filter: blur(40px);
+      radial-gradient(38% 48% at 22% 28%, var(--orange-glow), transparent 70%),
+      radial-gradient(44% 54% at 78% 72%, var(--blue-dim), transparent 70%);
+    filter: blur(44px);
     animation: aurora-drift 24s ease-in-out infinite alternate;
     mix-blend-mode: screen;
   }
 
-  /* Film-grain overlay — fixed, very low opacity, pointer-events:none. Uses an
-     inline SVG turbulence so there's no extra request. */
+  /* Film-grain overlay — fixed, very low opacity, no extra request. */
   .grain {
     position: fixed;
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    opacity: 0.04;
+    opacity: 0.035;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* Breathing vignette — fixed radial falloff, subtle scale pulse. */
+  /* Breathing vignette — fixed radial falloff, subtle pulse. */
   .vignette {
     position: fixed;
     inset: 0;
@@ -252,8 +285,7 @@ html.light {
 
 /* ─────────────────────────────────────────────────────────
    REDUCED MOTION — disable all CSS animations + transitions.
-   Framer Motion is gated separately via <MotionConfig reducedMotion="user">
-   in ThemeProvider. The typewriter in HeroSection also checks this preference.
+   Framer Motion is gated separately via <MotionConfig reducedMotion="user">.
    ───────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -262,4 +294,14 @@ html.light {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* In light mode the vignette would otherwise lock to full-dark; keep it
+     soft when motion is off. */
+  .vignette { opacity: 0.85; }
+}
+
+/* Light mode: the dark vignette overlay is wrong on a light canvas — soften it
+   to a gentle frost falloff instead. */
+html.light .vignette {
+  background: radial-gradient(120% 120% at 50% 40%, transparent 60%, rgba(8,9,10,0.05) 100%);
 }

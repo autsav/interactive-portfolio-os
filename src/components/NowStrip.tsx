@@ -26,8 +26,14 @@ export function NowStrip({ projects }: { projects: FeaturedProject[] }) {
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-40px" }}
-        className="bento-card px-5 py-4 md:px-7 md:py-5 flex flex-wrap items-center gap-x-4 gap-y-2"
+        className="bento-card relative overflow-hidden px-5 py-4 md:px-7 md:py-5 flex flex-wrap items-center gap-x-4 gap-y-2"
       >
+        {/* Left-edge accent line in orange. */}
+        <span
+          className="absolute left-0 top-0 bottom-0 w-[3px]"
+          style={{ background: "linear-gradient(to bottom, var(--orange), transparent)" }}
+          aria-hidden="true"
+        />
         <span className="flex items-center gap-2 shrink-0">
           <span className="relative flex h-2 w-2 shrink-0">
             {/* live pulse — reuses the green "available" dot motif */}

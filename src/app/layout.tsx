@@ -1,12 +1,33 @@
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { CustomCursor } from "@/components/CustomCursor";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Three-tier type system (Refined Cosmos):
+//   Inter          → body / UI       (weight 400/500/600, variable)
+//   Space Grotesk  → display headings (weight 500/600)
+//   JetBrains Mono → labels / code    (weight 400/500)
+// Loaded via next/font so they self-host (no render-blocking Google request)
+// and expose stable CSS variables consumed by globals.css.
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  variable: "--font-space",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-jet",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -35,7 +56,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geistMono.variable} dark`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} dark`}
+      suppressHydrationWarning
+    >
       <head>
         <script
           type="application/ld+json"

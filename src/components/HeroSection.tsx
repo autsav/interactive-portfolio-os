@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { ArrowDown, MapPin, FileText } from "lucide-react";
+import { MapPin, FileText } from "lucide-react";
 import { UniverseCanvas } from "./UniverseCanvas";
 import { usePrefersReducedMotion, usePointerFine } from "@/lib/hooks";
 
@@ -98,7 +98,7 @@ export function HeroSection() {
           roleIdx = (roleIdx + 1) % ROLES.length;
         }
       }
-      timeout = setTimeout(type, deleting ? 40 : 80);
+      timeout = setTimeout(type, deleting ? 30 : 60);
     }
 
     timeout = setTimeout(type, 700);
@@ -114,8 +114,8 @@ export function HeroSection() {
   function onCtaMove(e: React.MouseEvent<HTMLAnchorElement>) {
     if (!magnetic) return;
     const r = e.currentTarget.getBoundingClientRect();
-    mx.set((e.clientX - (r.left + r.width / 2)) * 0.3);
-    my.set((e.clientY - (r.top + r.height / 2)) * 0.3);
+    mx.set((e.clientX - (r.left + r.width / 2)) * 0.2);
+    my.set((e.clientY - (r.top + r.height / 2)) * 0.2);
   }
   function onCtaLeave() {
     mx.set(0);
@@ -134,6 +134,17 @@ export function HeroSection() {
           Gated off under reduced-motion (animation → 0 in globals.css). */}
       <div className="aurora" aria-hidden="true" />
 
+      {/* Focused gradient glow directly behind the hero text — warm orange
+          top-left, cool blue bottom-right. Subtle, never washing out the type. */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        aria-hidden="true"
+        style={{
+          background:
+            "radial-gradient(34rem 22rem at 38% 38%, var(--orange-glow), transparent 70%), radial-gradient(34rem 22rem at 64% 64%, var(--blue-dim), transparent 70%)",
+        }}
+      />
+
       {/* Bottom gradient fade */}
       <div
         className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
@@ -149,10 +160,13 @@ export function HeroSection() {
           className="mb-6 flex flex-wrap items-center justify-center gap-3"
         >
           <span
-            className="mono text-[11px] tracking-[0.25em] uppercase border px-4 py-2 rounded-full inline-flex items-center gap-2"
-            style={{ color: "var(--green)", borderColor: "var(--border-hover)", backgroundColor: "var(--orange-dim)" }}
+            className="frost-pill mono text-[11px] tracking-[0.25em] uppercase px-4 py-2 inline-flex items-center gap-2"
+            style={{ color: "var(--green)" }}
           >
-            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--green)" }} />
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping" style={{ backgroundColor: "var(--green)" }} aria-hidden="true" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "var(--green)" }} />
+            </span>
             Available for hire
           </span>
           <HeroStatus />
@@ -162,8 +176,8 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15 }}
-          className="text-4xl md:text-6xl font-bold tracking-tighter mb-5 leading-[1.05]"
-          style={{ color: "var(--fg)" }}
+          className="font-display text-5xl md:text-7xl font-semibold tracking-tight mb-5 leading-[1.0]"
+          style={{ color: "var(--fg)", letterSpacing: "-0.03em" }}
         >
           Utsab Adhikari
           <br />
@@ -204,7 +218,7 @@ export function HeroSection() {
             onMouseMove={onCtaMove}
             onMouseLeave={onCtaLeave}
             style={magnetic ? { x: sx, y: sy } : undefined}
-            className="px-7 py-3.5 text-white font-semibold rounded-full transition-transform active:scale-95 glow-orange"
+            className="px-7 py-3.5 text-white font-medium rounded-full transition-transform active:scale-95 glow-orange"
           >
             See the work
           </motion.a>
@@ -212,25 +226,38 @@ export function HeroSection() {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-7 py-3.5 border font-semibold rounded-full transition-colors hover:opacity-80 active:scale-95 inline-flex items-center gap-2"
-            style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
+            className="frost-pill px-7 py-3.5 font-medium transition-colors active:scale-95 inline-flex items-center gap-2"
+            style={{ color: "var(--fg)" }}
           >
             <FileText size={16} /> Résumé
           </a>
         </motion.div>
       </div>
 
+      {/* Scroll cue — a thin frost track with an orange segment that grows and
+          travels downward, hinting at the page below. Motion gated via Framer. */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.3 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
         aria-hidden="true"
       >
         <span className="mono text-[10px] tracking-[0.3em] uppercase" style={{ color: "var(--fg-muted)" }}>
           Scroll
         </span>
-        <ArrowDown size={14} style={{ color: "var(--orange)" }} />
+        <div
+          className="relative w-px h-12 overflow-hidden rounded-full"
+          style={{ backgroundColor: "var(--accent-frost)" }}
+        >
+          <motion.div
+            className="absolute left-0 top-0 w-full rounded-full"
+            style={{ height: "45%", background: "linear-gradient(to bottom, transparent, var(--orange))" }}
+            initial={{ y: "-110%" }}
+            animate={{ y: "230%" }}
+            transition={{ duration: 1.8, ease: "easeInOut", repeat: Infinity, repeatDelay: 0.4 }}
+          />
+        </div>
       </motion.div>
     </section>
   );

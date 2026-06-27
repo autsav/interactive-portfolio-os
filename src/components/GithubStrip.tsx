@@ -14,7 +14,7 @@ interface GithubStripProps {
 
 // Recharts needs concrete fill colours (SVG `fill` won't resolve CSS vars
 // reliably). Brand-aligned, accessible-on-dark palette.
-const LANG_BAR_COLORS = ["#FD7024", "#93C5FD", "#C084FC", "#34d399", "#FFD4B3", "#60A5FA"];
+const LANG_BAR_COLORS = ["#FD7024", "#3B9FF5", "#828fff", "#10b981", "#FFD4B3", "#93C5FD"];
 
 /** Numbers animate 0 → value on scroll-into-view; reduced-motion (and the
  *  pre-inView state) renders the final value instantly. Null (couldn't source)
@@ -81,7 +81,7 @@ export function GithubStrip({ data }: GithubStripProps) {
           </span>
           ◈ Live from GitHub
         </span>
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-3" style={{ color: "var(--fg)" }}>
+        <h2 className="font-display text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] mb-3" style={{ color: "var(--fg)", letterSpacing: "-0.02em" }}>
           The real <span className="text-gradient-orange">numbers</span>
         </h2>
         <p className="max-w-md mx-auto text-sm" style={{ color: "var(--fg-muted)" }}>
@@ -102,7 +102,7 @@ export function GithubStrip({ data }: GithubStripProps) {
               className="bento-card p-5 md:p-6 flex flex-col items-center text-center"
             >
               <Icon size={20} className="mb-3" style={{ color: "var(--orange)" }} />
-              <span className="text-2xl md:text-3xl font-bold mono tabular-nums" style={{ color: "var(--fg)" }}>
+              <span className="text-2xl md:text-3xl font-semibold mono tabular-nums" style={{ color: "var(--fg)" }}>
                 <CountUp value={s.value} />
               </span>
               <span className="mono text-[10px] uppercase tracking-wider mt-1" style={{ color: "var(--fg-muted)" }}>
@@ -137,7 +137,7 @@ export function GithubStrip({ data }: GithubStripProps) {
                   type="category"
                   dataKey="name"
                   width={110}
-                  tick={{ fill: "var(--fg-muted)", fontSize: 11, fontFamily: "IBM Plex Mono, monospace" }}
+                  tick={{ fill: "var(--fg-muted)", fontSize: 11, fontFamily: "var(--font-jet), monospace" }}
                   axisLine={false}
                   tickLine={false}
                 />
@@ -148,7 +148,7 @@ export function GithubStrip({ data }: GithubStripProps) {
                     border: "1px solid var(--border)",
                     borderRadius: 12,
                     fontSize: 12,
-                    fontFamily: "IBM Plex Mono, monospace",
+                    fontFamily: "var(--font-jet), monospace",
                     color: "var(--fg)",
                   }}
                   formatter={(value) => [`${value} repos`, "Count"] as [string, string]}

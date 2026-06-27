@@ -36,8 +36,8 @@ function ProjectCard({ p, index, onSelect }: { p: FeaturedProject; index: number
     const r = e.currentTarget.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width;
     const py = (e.clientY - r.top) / r.height;
-    ry.set((px - 0.5) * 8);
-    rx.set(-(py - 0.5) * 8);
+    ry.set((px - 0.5) * 4);
+    rx.set(-(py - 0.5) * 4);
     sheenX.set(px * 100);
     sheenY.set(py * 100);
   }
@@ -54,6 +54,7 @@ function ProjectCard({ p, index, onSelect }: { p: FeaturedProject; index: number
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ delay: index * 0.08 }}
+      whileHover={{ y: -4 }}
       style={{ perspective: 1000 }}
     >
       <motion.article
@@ -77,7 +78,7 @@ function ProjectCard({ p, index, onSelect }: { p: FeaturedProject; index: number
 
         <div className="relative flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h3 className="text-xl md:text-2xl font-bold tracking-tight" style={{ color: "var(--fg)" }}>
+            <h3 className="font-display text-xl md:text-[1.4rem] font-semibold tracking-tight" style={{ color: "var(--fg)" }}>
               {p.displayName}
             </h3>
             <p className="mono text-[11px] uppercase tracking-widest mt-1 flex items-center gap-2 flex-wrap" style={{ color: "var(--fg-muted)" }}>
@@ -142,7 +143,7 @@ function ProjectCard({ p, index, onSelect }: { p: FeaturedProject; index: number
               href={p.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-white transition-transform hover:scale-[1.03] active:scale-95"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-white transition-transform hover:scale-[1.03] active:scale-95"
               style={{ backgroundColor: "var(--orange)" }}
             >
               Live demo <ArrowUpRight size={16} />
@@ -152,15 +153,15 @@ function ProjectCard({ p, index, onSelect }: { p: FeaturedProject; index: number
             href={p.repoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold border transition-colors hover:opacity-80 active:scale-95"
-            style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}
+            className="frost-pill inline-flex items-center gap-2 px-5 py-2.5 font-medium transition-colors active:scale-95"
+            style={{ color: "var(--fg)" }}
           >
             <Github size={16} /> Source
           </a>
           <button
             type="button"
             onClick={() => onSelect(p)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold border transition-colors hover:opacity-80 active:scale-95"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium border transition-colors hover:opacity-80 active:scale-95"
             style={{ color: "var(--fg-muted)", borderColor: "var(--border)" }}
             aria-label={`Read ${p.displayName} case study`}
           >
@@ -186,7 +187,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
         <span className="mono text-xs tracking-[0.35em] uppercase mb-4 block" style={{ color: "var(--orange)" }}>
           ◈ Featured work
         </span>
-        <h2 className="text-3xl md:text-5xl font-bold tracking-tighter mb-4" style={{ color: "var(--fg)" }}>
+        <h2 className="font-display text-3xl md:text-5xl font-semibold tracking-tight leading-[1.1] mb-4" style={{ color: "var(--fg)", letterSpacing: "-0.02em" }}>
           Things I&apos;ve <span className="text-gradient-orange">built &amp; shipped</span>
         </h2>
         <p className="max-w-2xl text-base md:text-lg leading-relaxed" style={{ color: "var(--fg-muted)" }}>

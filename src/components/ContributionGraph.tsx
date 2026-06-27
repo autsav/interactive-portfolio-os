@@ -31,7 +31,7 @@ export function ContributionGraph({ data }: { data: ContributionData | null }) {
           Contributions — last year
         </p>
         <span className="mono text-xs" style={{ color: "var(--fg)" }}>
-          <span className="font-bold">{data.total.toLocaleString("en-GB")}</span>
+          <span className="font-semibold">{data.total.toLocaleString("en-GB")}</span>
           <span style={{ color: "var(--fg-muted)" }}> contributions</span>
         </span>
       </div>

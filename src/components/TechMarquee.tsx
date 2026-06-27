@@ -43,7 +43,7 @@ export function TechMarquee({ projects }: { projects: FeaturedProject[] }) {
         {!reducedMotion && renderStrip("b")}
       </div>
       <style>{`
-        .marquee-animate { animation: marquee-scroll 40s linear infinite; }
+        .marquee-animate { animation: marquee-scroll 30s linear infinite; }
         .marquee-track:hover .marquee-animate { animation-direction: reverse; }
         @keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
       `}</style>

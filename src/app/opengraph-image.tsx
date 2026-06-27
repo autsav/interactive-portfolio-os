@@ -16,18 +16,18 @@ export default function Image() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "linear-gradient(135deg, #070709 0%, #14101a 60%, #1a0f08 100%)",
-          color: "#F5ECD7",
+          background: "linear-gradient(135deg, #08090a 0%, #101319 60%, #1a0f08 100%)",
+          color: "#f7f8f8",
           fontFamily: "sans-serif",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28 }}>
-          <div style={{ width: 18, height: 18, borderRadius: 999, background: "#34d399", display: "flex" }} />
-          <span style={{ fontSize: 24, letterSpacing: 6, textTransform: "uppercase", color: "#9494a5" }}>
+          <div style={{ width: 18, height: 18, borderRadius: 999, background: "#10b981", display: "flex" }} />
+          <span style={{ fontSize: 24, letterSpacing: 6, textTransform: "uppercase", color: "#8a8f98" }}>
             Available for hire · London
           </span>
         </div>
-        <div style={{ fontSize: 84, fontWeight: 700, letterSpacing: -3, lineHeight: 1.02, marginBottom: 18 }}>
+        <div style={{ fontSize: 84, fontWeight: 600, letterSpacing: -3, lineHeight: 1.02, marginBottom: 18 }}>
           Utsab Adhikari
         </div>
         <div
@@ -41,7 +41,7 @@ export default function Image() {
         >
           builds AI agents, APIs &amp; web apps.
         </div>
-        <div style={{ fontSize: 26, color: "#9494a5", marginTop: 36 }}>
+        <div style={{ fontSize: 26, color: "#8a8f98", marginTop: 36 }}>
           Full-stack &amp; backend · TypeScript / Node · Python / AI
         </div>
       </div>

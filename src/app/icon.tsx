@@ -19,7 +19,7 @@ export default function Icon() {
           borderRadius: 8,
         }}
       >
-        <div style={{ width: 10, height: 10, borderRadius: 999, background: "#F5ECD7", display: "flex" }} />
+        <div style={{ width: 10, height: 10, borderRadius: 999, background: "#f7f8f8", display: "flex" }} />
       </div>
     ),
     { ...size }

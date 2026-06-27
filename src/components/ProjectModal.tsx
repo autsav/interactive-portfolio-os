@@ -79,7 +79,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               {project.repo}
               {relativeTime && <span style={{ color: "var(--fg-subtle)" }}> · updated {relativeTime}</span>}
             </p>
-            <h3 id="project-modal-title" className="text-2xl md:text-3xl font-bold tracking-tight pr-10" style={{ color: "var(--fg)" }}>
+            <h3 id="project-modal-title" className="font-display text-2xl md:text-3xl font-semibold tracking-tight pr-10" style={{ color: "var(--fg)", letterSpacing: "-0.02em" }}>
               {project.displayName}
             </h3>
 
@@ -131,11 +131,11 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             {/* links */}
             <div className="flex flex-wrap items-center gap-3 mt-6 pt-2">
               {project.liveUrl && (
-                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-white transition-transform hover:scale-[1.03] active:scale-95" style={{ backgroundColor: "var(--orange)" }}>
+                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-white transition-transform hover:scale-[1.03] active:scale-95" style={{ backgroundColor: "var(--orange)" }}>
                   Live demo <ArrowUpRight size={16} />
                 </a>
               )}
-              <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold border transition-colors hover:opacity-80 active:scale-95" style={{ color: "var(--fg)", borderColor: "var(--border-hover)" }}>
+              <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" className="frost-pill inline-flex items-center gap-2 px-5 py-2.5 font-medium transition-colors active:scale-95" style={{ color: "var(--fg)" }}>
                 <Github size={16} /> Source
               </a>
             </div>

@@ -14,14 +14,23 @@ export function ScrollProgress() {
   const smooth = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
 
   return (
-    <motion.div
-      aria-hidden="true"
-      className="fixed top-0 left-0 right-0 h-[3px] z-50 origin-left"
-      style={{
-        scaleX: reducedMotion ? scrollYProgress : smooth,
-        background:
-          "linear-gradient(to right, var(--orange), var(--orange-glow))",
-      }}
-    />
+    <>
+      {/* Frost-tinted base track. */}
+      <div
+        aria-hidden="true"
+        className="fixed top-0 left-0 right-0 h-[2px] z-50"
+        style={{ backgroundColor: "var(--accent-frost)", opacity: 0.5 }}
+      />
+      {/* Orange fill with a soft glow at the leading edge. */}
+      <motion.div
+        aria-hidden="true"
+        className="fixed top-0 left-0 right-0 h-[2px] z-50 origin-left"
+        style={{
+          scaleX: reducedMotion ? scrollYProgress : smooth,
+          background: "linear-gradient(to right, var(--orange), #FF9A5C)",
+          filter: "drop-shadow(0 0 6px var(--orange))",
+        }}
+      />
+    </>
   );
 }

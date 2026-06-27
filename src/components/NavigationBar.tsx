@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useSyncExternalStore, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LayoutGrid, Github, Twitter, MapPin, Sun, Moon, Menu, X } from "lucide-react";
+import { Github, Twitter, MapPin, Sun, Moon, Menu, X } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 
 // false during SSR, true after hydration — used to defer client-only UI (the
@@ -46,8 +46,8 @@ function NavClock() {
   return (
     <div
       suppressHydrationWarning
-      className="hidden sm:flex items-center gap-1.5 mono text-xs px-3 py-1.5 rounded-full border shadow-sm"
-      style={{ color: "var(--fg-muted)", backgroundColor: "var(--orange-dim)", borderColor: "var(--border)" }}
+      className="hidden sm:flex items-center gap-1.5 frost-pill mono text-xs px-3 py-1.5"
+      style={{ color: "var(--fg-muted)" }}
     >
       <MapPin size={10} style={{ color: "var(--orange)" }} />
       LONDON {time || "--:--"}
@@ -123,19 +123,24 @@ export function NavigationBar() {
         }`}
         style={{ borderColor: scrolled || menuOpen ? "var(--border)" : "transparent" }}
       >
-        {/* Left: Brand */}
+        {/* Left: Brand — monospace initials in a frosted square. */}
         <div className="flex items-center gap-3">
           <div
-            className="w-8 h-8 rounded-full border flex items-center justify-center shrink-0"
-            style={{ borderColor: "var(--border-hover)", backgroundColor: "var(--orange-dim)" }}
+            className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mono text-[13px] font-medium tracking-tight"
+            style={{
+              border: "1px solid var(--accent-frost)",
+              backgroundColor: "var(--orange-dim)",
+              color: "var(--orange)",
+            }}
+            aria-hidden="true"
           >
-            <LayoutGrid size={16} style={{ color: "var(--orange)" }} />
+            UA
           </div>
           <div className="hidden sm:flex flex-col">
-            <span className="font-bold text-[15px] leading-tight tracking-[-0.02em]" style={{ color: "var(--fg)" }}>
+            <span className="font-semibold text-[15px] leading-tight tracking-[-0.02em]" style={{ color: "var(--fg)" }}>
               Utsab Adhikari
             </span>
-            <span className="mono text-[10px] flex items-center gap-1.5 tracking-widest uppercase font-bold" style={{ color: "var(--green)" }}>
+            <span className="mono text-[10px] flex items-center gap-1.5 tracking-widest uppercase font-medium" style={{ color: "var(--green)" }}>
               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--green)" }} />
               Available for Hire
             </span>
@@ -143,7 +148,7 @@ export function NavigationBar() {
         </div>
 
         {/* Center: Nav Links (desktop) */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-semibold">
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium">
           {NAV_LINKS.map(([id, label]) => {
             const active = activeSection === id;
             return (
@@ -151,7 +156,7 @@ export function NavigationBar() {
                 key={id}
                 href={`#${id}`}
                 aria-current={active ? "true" : undefined}
-                className="relative transition-colors hover:opacity-70 inline-flex items-center gap-1.5 px-1"
+                className="relative transition-colors hover:opacity-70 inline-flex items-center gap-1.5 px-1 tracking-[0.02em]"
                 style={{ color: linkColor(active) }}
               >
                 {active && (
@@ -246,7 +251,7 @@ export function NavigationBar() {
                   href={`#${id}`}
                   aria-current={active ? "true" : undefined}
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-colors hover:bg-[var(--orange-dim)]"
+                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-[var(--orange-dim)]"
                   style={{ color: linkColor(active) }}
                 >
                   {active && (

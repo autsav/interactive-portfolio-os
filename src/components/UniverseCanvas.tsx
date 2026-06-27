@@ -34,28 +34,29 @@ export function UniverseCanvas() {
     mount.appendChild(renderer.domElement);
 
     // ── Starfield ──────────────────────────────────────────────────
+    // Frost-tinted, fewer points than before — the scene should breathe.
     const starGeo = new THREE.BufferGeometry();
-    const starCount = 2000;
+    const starCount = 1400;
     const starPositions = new Float32Array(starCount * 3);
     for (let i = 0; i < starCount * 3; i++) {
       starPositions[i] = (Math.random() - 0.5) * 200;
     }
     starGeo.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
-    const starMat = new THREE.PointsMaterial({ color: 0xffd4b3, size: 0.08, transparent: true, opacity: 0.6 });
+    const starMat = new THREE.PointsMaterial({ color: 0xd6ebfd, size: 0.07, transparent: true, opacity: 0.5 });
     scene.add(new THREE.Points(starGeo, starMat));
 
     // ── Orbit Planets ──────────────────────────────────────────────
+    // Simplified to a central orange sun + 3 orbiting spheres — cleaner and
+    // more elegant, letting the content breathe (no connection-line clutter).
     interface PlanetConfig { radius: number; orbitRadius: number; speed: number; color: number; emissive: number; wireframe?: boolean; }
     const planetConfigs: PlanetConfig[] = [
       { radius: 2.2, orbitRadius: 0,  speed: 0,     color: 0xFD7024, emissive: 0xFD7024 },  // center sun
-      { radius: 0.7, orbitRadius: 6,  speed: 0.008, color: 0x60A5FA, emissive: 0x1d4ed8 },
-      { radius: 1.1, orbitRadius: 10, speed: 0.005, color: 0xFD7024, emissive: 0x7c2d00 },
-      { radius: 0.5, orbitRadius: 14, speed: 0.012, color: 0xC084FC, emissive: 0x6b21a8 },
-      { radius: 0.9, orbitRadius: 18, speed: 0.003, color: 0x34d399, emissive: 0x064e3b },
+      { radius: 0.7, orbitRadius: 7,  speed: 0.007, color: 0x3B9FF5, emissive: 0x1d4ed8 },
+      { radius: 1.0, orbitRadius: 11, speed: 0.005, color: 0x828fff, emissive: 0x3730a3 },
+      { radius: 0.6, orbitRadius: 16, speed: 0.010, color: 0x10b981, emissive: 0x064e3b },
     ];
 
     const planets: { mesh: THREE.Mesh; cfg: PlanetConfig; angle: number }[] = [];
-    const orbitLines: THREE.Line[] = [];
 
     planetConfigs.forEach((cfg) => {
       const geo = new THREE.SphereGeometry(cfg.radius, 32, 32);
@@ -76,7 +77,7 @@ export function UniverseCanvas() {
       // Orbit ring
       if (cfg.orbitRadius > 0) {
         const ringGeo = new THREE.RingGeometry(cfg.orbitRadius - 0.03, cfg.orbitRadius + 0.03, 80);
-        const ringMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.04 });
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0xd6ebfd, side: THREE.DoubleSide, transparent: true, opacity: 0.05 });
         const ring = new THREE.Mesh(ringGeo, ringMat);
         ring.rotation.x = Math.PI / 2;
         scene.add(ring);
@@ -88,19 +89,9 @@ export function UniverseCanvas() {
     const orangeLight = new THREE.PointLight(0xFD7024, 4, 40);
     orangeLight.position.set(0, 0, 0);
     scene.add(orangeLight);
-    const blueLight = new THREE.PointLight(0x3B82F6, 2, 50);
+    const blueLight = new THREE.PointLight(0x3B9FF5, 2, 50);
     blueLight.position.set(15, 10, 5);
     scene.add(blueLight);
-
-    // ── Connection Lines between planets ──────────────────────────
-    const lineMat = new THREE.LineBasicMaterial({ color: 0xFD7024, transparent: true, opacity: 0.05 });
-    for (let i = 1; i < planets.length - 1; i++) {
-      const points = [planets[i].mesh.position, planets[i + 1].mesh.position];
-      const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
-      const line = new THREE.Line(lineGeo, lineMat);
-      scene.add(line);
-      orbitLines.push(line);
-    }
 
     // ── Mouse Parallax ─────────────────────────────────────────────
     let mouseX = 0, mouseY = 0;

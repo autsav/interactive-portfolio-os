@@ -47,7 +47,7 @@ export function CommandPalette({ projects }: CommandPaletteProps) {
           background: "var(--bg-surface)",
           backdropFilter: "var(--glass-blur)",
           WebkitBackdropFilter: "var(--glass-blur)",
-          border: "1px solid var(--border)",
+          border: "1px solid var(--accent-frost)",
           color: "var(--fg-muted)",
         }}
       >

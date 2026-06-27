@@ -42,8 +42,13 @@ export default async function Home() {
       {/* Featured work — demo-first cards with real, live star/fork counts */}
       <FeaturedProjects projects={github.featured} />
 
+      {/* Frost-tinted hairline — visual rhythm marker between major sections. */}
+      <div className="px-4" aria-hidden="true"><div className="section-divider" /></div>
+
       {/* Live GitHub strip — real, cached profile stats */}
       <GithubStrip data={github} />
+
+      <div className="px-4" aria-hidden="true"><div className="section-divider" /></div>
 
       {/* Skills — only those backed by the featured projects */}
       <SkillsSection projects={github.featured} />
