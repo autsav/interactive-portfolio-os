@@ -1,235 +1,115 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────
-   CSS CUSTOM PROPERTIES
-   Defined per-theme so every component can use var()
-   ───────────────────────────────────────────────────────── */
-
-/* DARK mode (Default) */
-:root,
-html.dark {
-  --bg:           #070709;
-  --bg-surface:   rgba(12,12,16,0.95);
-  --bg-card:      rgba(15,15,22,0.90);
-  --bg-card-hover:rgba(20,20,30,0.97);
-  --fg:           #F5ECD7;
-  --fg-muted:     #9494a5; /* Brightened for dark mode */
-  --fg-subtle:    #5a5a6e;
-  --border:       rgba(255,255,255,0.08);
-  --border-card:  rgba(255,255,255,0.08);
-  --border-hover: rgba(253,112,36,0.30);
-  --shadow-card:  0 10px 40px rgba(0,0,0,0.6);
-  --orange:       #FD7024;
-  --orange-dim:   rgba(253,112,36,0.12);
-  --orange-glow:  rgba(253,112,36,0.10);
-  --blue:         #3B82F6;
-  --green:        #34d399;
-  --purple:       #C084FC;
-  --glass-blur:   blur(20px);
-}
-
-/* LIGHT mode — Explicit override */
-html.light {
-  --bg:           #F7F3ED;
-  --bg-surface:   rgba(255,252,248,0.98);
-  --bg-card:      rgba(255,252,248,0.90);
-  --bg-card-hover:rgba(250,246,240,0.97);
-  --fg:           #1C1917;
-  --fg-muted:     #78716C;
-  --fg-subtle:    #A8A29E;
-  --border:       rgba(28,25,23,0.12);
-  --border-card:  rgba(28,25,23,0.08);
-  --border-hover: rgba(253,112,36,0.45);
-  --shadow-card:  0 8px 30px rgba(0,0,0,0.08);
-  --orange:       #E86010;
-  --orange-dim:   rgba(232,96,16,0.08);
-  --orange-glow:  rgba(232,96,16,0.05);
-  --blue:         #2563EB;
-  --green:        #059669;
-  --purple:       #9333EA;
-  --glass-blur:   blur(16px);
-}
-
-/* ─────────────────────────────────────────────────────────
-   TAILWIND THEME TOKENS (static, non-theme-sensitive)
+   Direction A — "Blueprint"
+   Light, structural, engineering-drawing aesthetic.
+   One committed theme (no toggle), executed precisely.
    ───────────────────────────────────────────────────────── */
 @theme {
-  --font-mono: "IBM Plex Mono", monospace;
-  --font-sans: "IBM Plex Sans", sans-serif;
+  --color-paper: #eceff3; /* page background (cool, not cream) */
+  --color-surface: #f6f8fa; /* cards / raised panels */
+  --color-ink: #0f1419; /* primary text */
+  --color-graphite: #59636e; /* secondary text / labels */
+  --color-blueprint: #1d4ed8; /* primary accent */
+  --color-blueprint-ink: #163ca6; /* accent text on light */
+  --color-teal: #0e7c86; /* rare secondary accent */
+  --color-line: #cbd3dd; /* structural hairlines / grid */
+  --color-line-soft: #dbe1e8;
+
+  --font-display: var(--ff-display), "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--ff-sans), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--ff-mono), "IBM Plex Mono", ui-monospace, monospace;
 }
 
-/* ─────────────────────────────────────────────────────────
-   BASE STYLES
-   ───────────────────────────────────────────────────────── */
 @layer base {
-  *, *::before, *::after { box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background-color: var(--bg);
-    color: var(--fg);
-    font-family: "IBM Plex Sans", sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  * {
+    box-sizing: border-box;
   }
 
-  /* Transition for all theme-sensitive properties */
-  *, *::before, *::after {
-    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
   }
 
   ::selection {
-    background: rgba(253,112,36,0.25);
-    color: var(--fg);
+    background: color-mix(in srgb, var(--color-blueprint) 22%, transparent);
   }
 
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb {
-    background: var(--orange-dim);
-    border-radius: 10px;
+  /* Visible keyboard focus everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--color-blueprint);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--orange-dim);
+
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 }
 
-/* ─────────────────────────────────────────────────────────
-   UTILITY CLASSES  (theme-aware via CSS vars)
-   ───────────────────────────────────────────────────────── */
 @layer utilities {
-  /* Glass / surface */
-  .glass {
-    background: var(--bg-surface);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--border);
+  /* Mono technical label, e.g. "01 — Projects" */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-graphite);
   }
 
-  .glass-orange {
-    background: var(--orange-dim);
-    backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--border-hover);
+  /* Blueprint grid — used sparingly (hero only). */
+  .grid-blueprint {
+    background-image:
+      linear-gradient(var(--color-line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-line-soft) 1px, transparent 1px);
+    background-size: 32px 32px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 75%);
   }
 
-  /* Bento card */
-  .bento-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border-radius: 1.25rem;
-    box-shadow: var(--shadow-card);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  /* One orchestrated load reveal — progressive enhancement.
+     Base state is fully visible; the fade only applies when motion is welcome. */
+  .reveal { opacity: 1; }
+  .reveal-1 { animation-delay: 0.05s; }
+  .reveal-2 { animation-delay: 0.15s; }
+  .reveal-3 { animation-delay: 0.25s; }
+  .reveal-4 { animation-delay: 0.35s; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: reveal 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+    }
   }
 
-  .bento-card:hover {
-    border-color: var(--border-hover);
-    box-shadow: 0 0 30px var(--orange-glow);
+  @keyframes reveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-
-  /* Gradients */
-  .text-gradient-orange {
-    background: linear-gradient(135deg, var(--orange) 0%, #FF9A5C 50%, #FFD4B3 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .text-gradient-cool {
-    background: linear-gradient(135deg, var(--blue-soft) 0%, var(--purple) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Glows */
-  .glow-orange {
-    box-shadow: 0 0 30px var(--orange-dim), 0 0 80px var(--orange-glow);
-  }
-
-  .glow-blue {
-    box-shadow: 0 0 30px var(--blue-dim), 0 0 80px rgba(59,130,246,0.04);
-  }
-
-  /* Monospace text */
-  .mono { font-family: "IBM Plex Mono", monospace; }
-
-  /* orange hairline */
-  .hairline-orange {
-    border-top: 1px solid var(--border-hover);
-  }
-
-  /* Caustic animation */
-  @keyframes caustic {
-    0%, 100% { opacity: 0.04; transform: scale(1) rotate(0deg); }
-    33%       { opacity: 0.07; transform: scale(1.1) rotate(5deg); }
-    66%       { opacity: 0.03; transform: scale(0.95) rotate(-3deg); }
-  }
-  .caustic-light { animation: caustic 8s ease-in-out infinite; }
-
-  @keyframes float-slow {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-12px); }
-  }
-  .float-slow { animation: float-slow 6s ease-in-out infinite; }
-
-  @keyframes pulse-orange {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(253,112,36,0.4); }
-    50%       { box-shadow: 0 0 0 8px rgba(253,112,36,0); }
-  }
-  .pulse-orange { animation: pulse-orange 2s ease-in-out infinite; }
-
-  @keyframes scan-line {
-    0%   { transform: translateY(-100%); }
-    100% { transform: translateY(100vh); }
-  }
-  .scan-line { animation: scan-line 8s linear infinite; }
-}
-
-/* ─────────────────────────────────────────────────────────
-   LIGHT MODE — override hardcoded dark Tailwind classes
-   so theme switch is visible even in unmigrated components
-   ───────────────────────────────────────────────────────── */
-html.light {
-  /* Page & section backgrounds */
-  background-color: var(--bg);
-
-  /* Catch hardcoded dark text Tailwind classes */
-  .text-\[\#F5ECD7\]  { color: var(--fg) !important; }
-  .text-\[\#5a5a6e\]  { color: var(--fg-muted) !important; }
-  .text-\[\#c8bfaf\]  { color: var(--fg-muted) !important; }
-
-  /* Catch hardcoded dark backgrounds */
-  .bg-\[\#070709\]    { background-color: var(--bg) !important; }
-  .bg-black           { background-color: var(--bg) !important; }
-  .bg-black\/80       { background-color: var(--bg-surface) !important; }
-
-  /* White/border utilities that assume dark bg */
-  .border-white\/5    { border-color: var(--border) !important; }
-  .border-white\/6    { border-color: var(--border) !important; }
-  .border-white\/8    { border-color: var(--border) !important; }
-  .bg-white\/4        { background-color: rgba(0,0,0,0.04) !important; }
-  .bg-white\/3        { background-color: rgba(0,0,0,0.03) !important; }
-  .bg-white\/2        { background-color: rgba(0,0,0,0.02) !important; }
-  .bg-white\/5        { background-color: rgba(0,0,0,0.05) !important; }
-
-  /* Neutral / zinc shades on dark components */
-  .text-neutral-400   { color: var(--fg-muted) !important; }
-  .text-neutral-500   { color: var(--fg-muted) !important; }
-  .text-neutral-600   { color: var(--fg-subtle) !important; }
-  .text-neutral-700   { color: var(--fg-subtle) !important; }
-  .bg-neutral-900     { background-color: rgba(0,0,0,0.05) !important; }
-  .border-neutral-800 { border-color: var(--border) !important; }
-
-  /* MLOps / bento hardcoded dark text */
-  .text-\[\#F5ECD7\], .text-white { color: var(--fg) !important; }
 }
