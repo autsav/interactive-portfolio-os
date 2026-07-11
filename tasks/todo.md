@@ -94,16 +94,22 @@ current site); domain stays **utsabadhikari.com**.
 - Layout: thin persistent status strip, panelized cards, one orchestrated
   boot-in reveal (respects prefers-reduced-motion).
 
-## Build slices (each ends with `npm run build` passing + screenshot)
-- [ ] Slice 0 — strip current site; set up tokens/type/layout shell for chosen
-      direction; `projects.ts` typed data file (no CMS).
-- [ ] Slice 1 — Hero + proof strip.
-- [ ] Slice 2 — Projects (Tier 1 + Tier 2 cards).
-- [ ] Slice 3 — `/projects/[slug]` case-study template (SSG via
-      generateStaticParams) for the two Tier-1 projects.
-- [ ] Slice 4 — How I work + About + Contact.
-- [ ] Slice 5 — polish: OG image per page, metadata/title, focus states,
-      responsive to 360px, reduced-motion, alt text.
+## Build slices (each ended with `npm run build` passing + screenshot)
+- [x] Slice 0 — stripped old site; Blueprint tokens/type/layout shell;
+      `projects.ts` typed data file (no CMS).
+- [x] Slice 1 — Hero + proof strip + signature architecture diagram.
+- [x] Slice 2 — Projects (Tier 1 large + Tier 2 compact cards).
+- [x] Slice 3 — `/projects/[slug]` case-study pages (SSG) for AI LMS + VisaTrack.
+- [x] Slice 4 — How I work + About + Contact + footer.
+- [x] Slice 5 — OG image per page (next/og), metadata/title, focus states,
+      360px responsive, reduced-motion, alt text.
+
+## Verification results (mobile, production build)
+- Lighthouse: Performance 98 · Accessibility 96 · Best-practices 100 · SEO 100.
+- Internal links all 200 (/, both case studies, robots, sitemap, OG routes).
+- 360px: no horizontal overflow. reduced-motion honoured.
+- External links (github.com/autsav, *.vercel.app demos) can't be 200-checked
+  from the sandbox (egress policy blocks them) — owner to confirm.
 
 ## Claims to confirm / flagged (never invented)
 - VisaTrack: Stripe/Resend? → omit unless confirmed. All case-study specifics
