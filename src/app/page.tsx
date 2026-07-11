@@ -1,5 +1,6 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { Hero } from "@/components/Hero";
+import { ProjectsSection } from "@/components/ProjectsSection";
 
 export default function Home() {
   return (
@@ -7,7 +8,8 @@ export default function Home() {
       <SiteHeader />
       <main>
         <Hero />
-        {/* Slices 2–4: Projects, How I work, About, Contact */}
+        <ProjectsSection />
+        {/* Slice 4: How I work, About, Contact */}
       </main>
     </>
   );

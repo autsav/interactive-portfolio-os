@@ -100,7 +100,6 @@ export const PROJECTS: Project[] = [
           title: "UUID-based learners, no auth (tradeoff)",
           body:
             "Learners are identified by a UUID with no login — fast to try, but state isn't portable across devices. Auth is the first thing I'd add for a real deployment.",
-          flagged: true,
         },
       ],
       differently:
@@ -112,24 +111,24 @@ export const PROJECTS: Project[] = [
     name: "VisaTrack",
     tier: 1,
     problem:
-      "People on UK visas track refusal-risk deadlines — salary thresholds, right-to-work, travel limits — across scattered documents.",
+      "People on UK visas need to keep their status and the documents that prove it in one reliable place.",
     built:
-      "A UK visa-compliance tracker on Next.js and Supabase: authentication, document storage, and status/deadline tracking in one place.",
+      "A UK visa tracker on Next.js and Supabase — sign-in, document storage, and status tracking in one app.",
     decision:
-      "Per-user isolation of immigration data enforced at the database layer with Supabase row-level security.",
+      "One managed backend: Supabase provides auth, Postgres and document storage, so there are no separate services to run or secure for a solo-built product.",
     stack: ["Next.js", "TypeScript", "Supabase", "PostgreSQL"],
     liveUrl: null,
     repoUrl: null, // private repo — intentionally no link
     livePending: true,
-    flagged: true,
+    flagged: true, // demo URL + finer details to be confirmed by owner
     caseStudy: {
       intro:
-        "VisaTrack keeps UK visa holders on top of the deadlines that put status at risk. It stores the relevant documents and surfaces upcoming obligations, built on Next.js with Supabase for auth, Postgres, and storage. (Case-study details below are drafted from the repo and need owner confirmation before publishing.)",
+        "VisaTrack helps people on UK visas keep their status and documents in one place. It's built on Next.js with Supabase providing authentication, a Postgres database, and file storage.",
       diagram: {
         nodes: [
           { id: "client", label: "Next.js", sub: "app router", col: 0, row: 1, accent: true },
           { id: "auth", label: "Supabase Auth", sub: "sessions", col: 1, row: 0 },
-          { id: "db", label: "Postgres", sub: "RLS per user", col: 1, row: 1 },
+          { id: "db", label: "Postgres", sub: "records", col: 1, row: 1 },
           { id: "storage", label: "Supabase Storage", sub: "documents", col: 1, row: 2 },
         ],
         edges: [
@@ -140,14 +139,12 @@ export const PROJECTS: Project[] = [
       },
       decisions: [
         {
-          title: "Row-level security for tenant isolation",
+          title: "One managed backend",
           body:
-            "Each user only ever sees their own immigration records, enforced in Postgres via Supabase RLS rather than in application code — the isolation holds even if a query is wrong.",
-          flagged: true,
+            "Auth, the Postgres database and document storage all run on Supabase — a single managed backend rather than several stitched-together services, which keeps a solo-built product maintainable.",
         },
       ],
-      differently:
-        "To be completed with the owner — plus the live demo URL once it's deployed.",
+      differently: "",
     },
   },
   {
